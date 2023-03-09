@@ -1,39 +1,18 @@
-reset_all:
-	docker-compose down --volumes --remove-orphans
-	sudo rm -rf data
-	make start
+run_postgres:
+	docker pull postgres
+	docker run --name postgres -e POSTGRES_PASSWORD=postgres -d -p 5432:5432 postgres
 
-make start:
-	make run
-	make migrate
-	make logs
+dev:
+	cd backend/ && npm run dev
 
-run: 
-	docker-compose up -d
+build:
+	cd backend/ && npm run build
 
-down:
-	docker-compose down
-
-rebuild_web:
-	docker-compose up -d --no-deps --build web
-
-rebuild_api:
-	docker-compose up -d --no-deps --build api
+start:
+	cd backend/ && npm run start
 
 migrate:
-	docker exec -it petlovers_api bash -c "npx prisma migrate dev --name migrations"
+	cd backend/ && npx prisma migrate dev --name migrations
 
-logs:
-	docker-compose logs -f
-
-db_bash:
-	docker exec -it petlovers_db bash
-
-api_bash:
-	docker exec -it petlovers_api bash
-
-envs:
-	cp .env.example .env
-
-api_ip_address:
-	docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' petlovers_api
+prisma_studio:
+	cd backend/ && npx prisma studio
