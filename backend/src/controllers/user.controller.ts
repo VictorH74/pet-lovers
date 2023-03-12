@@ -5,6 +5,7 @@ import { UserService } from '../services/user.service';
 import { formatUser } from '../utils/helpers';
 import bcrypt from 'bcrypt';
 import jwt from "jsonwebtoken";
+import { validateAddress } from '../utils/validations';
 
 export class UserController {
   public static async getUserToken(req: Request, res: Response): Promise<any> {
@@ -21,10 +22,10 @@ export class UserController {
       const token = jwt.sign({ userId: user.id }, SECRET, { expiresIn: "1h" });
 
       return res.send({ token });
-      
+
     } catch (error) {
       if (error instanceof Error) {
-        res.status(500).send({error: error.message});
+        res.status(500).send({ error: error.message });
         return;
       }
       console.error(error);
@@ -35,6 +36,11 @@ export class UserController {
   public static async createUser(req: Request, res: Response): Promise<void> {
     try {
       const userData: User = req.body;
+
+      if (userData.address && !validateAddress(userData.address)) {
+        throw new Error('Invalid address')
+      }
+
       const user = await UserService.createUser(userData);
       res.status(201).json(user);
     } catch (error) {
@@ -74,7 +80,16 @@ export class UserController {
   public static async updateUser(req: Request, res: Response): Promise<void> { /////
     try {
       const userId = req.params.id;
-      const userData = req.body;
+      const userData: Partial<User> = req.body;
+
+      if (userData.address && !validateAddress(userData.address)) {
+        throw new Error('Invalid address')
+      }
+
+      if (userData.password) {
+        userData.password = await bcrypt.hash(userData.password, 10);
+      }
+
       const user = await UserService.updateUser(userId, userData);
       res.status(200).json(formatUser(user));
     } catch (error) {

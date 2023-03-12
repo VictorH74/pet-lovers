@@ -7,7 +7,7 @@ export function formatDate(date: Date): string {
   return `${day}/${month}/${year}`;
 }
 
-const formatAddress = (address: string) => {
+export const formatAddress = (address: string) => {
   let addressArray = address.split("__");
   let formattedData: { [key: string]: string } = {};
   addressArray.forEach(data => {

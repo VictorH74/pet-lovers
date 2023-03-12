@@ -6,9 +6,9 @@ const router = Router();
 
 router.post('/login', UserController.getUserToken);
 
-router.post('/', UserController.createUser);
-
 router.get('/', UserController.listUsers);
+
+router.post('/add', UserController.createUser);
 
 router.get('/:id', UserController.retrieveUser);
 
