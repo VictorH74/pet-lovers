@@ -36,6 +36,7 @@ model PetShop {
   owner       String
   website     String?
   phone       String
+  address     String   
   createdAt   DateTime @default(now())
   petSpecies  String[]
   rating      Rate     @relation(fields: [rateId], references: [id])
@@ -50,4 +51,5 @@ model User {
   email    String  @unique
   password String
   phone    String?
+  address  String? 
 }
