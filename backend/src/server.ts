@@ -1,26 +1,36 @@
-import express, { Application, Response } from "express";
-// import bodyParser from "body-parser";
+import express, { Application, Request, Response } from "express";
 import { PrismaClient } from '@prisma/client'
-// import cors from "cors"
+import bcrypt from 'bcrypt';
+import jwt from "jsonwebtoken";
+import { app } from "./app";
+
+interface UserPayload {
+    id: string;
+    name: string;
+    email: string;
+    phone: string;
+}
+
+declare global {
+    namespace Express {
+        interface Request {
+            currentUser?: UserPayload;
+        }
+    }
+}
+
 const prisma = new PrismaClient();
 
-const app: Application = express();
+export const SECRET: string = process.env['SECRET_KEY'] ?
+    process.env['SECRET_KEY']
+    :
+    (() => { throw new Error('SECRET_KEY not defined') })();
+
 
 const PORT: number = 3000;
 
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: true }));
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
 app.get("/", (_req, res: Response) => {
-    res.json({ message: "Helloo!" });
-})
-
-app.get("/users", async (_req, res: Response) => {
-    const users = await prisma.user.findMany();
-    res.json({ users });
+    res.json({ message: "Helloo!!!" });
 })
 
 app.listen(PORT, () => {
