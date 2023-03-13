@@ -1,6 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { UserService } from '@/services/user.service';
-import { formatUser } from '@/utils/helpers';
 import { validateAddress } from '@/utils/validations';
 import { User } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next'
