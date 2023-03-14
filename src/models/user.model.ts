@@ -1,6 +1,5 @@
 import { PrismaClient, User } from '@prisma/client'
 import bcrypt from 'bcrypt';
-import { validateAddress } from '../utils/validations';
 
 const prisma = new PrismaClient()
 

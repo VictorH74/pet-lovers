@@ -1,0 +1,32 @@
+[
+    {
+        "id": "1a5e133a-69d5-445a-94b7-271ffad14ad7",
+        "name": "Tonhão Pets",
+        "description": "Encontre o pet perfeito para você!",
+        "userId": "3c5c133c-69d5-445c-94c7-271ffcd14cd7",
+        "phone": "",
+        "address": "zip=45994160__street=Monte Carmelo__number=1123__neighborhood=Eduardo Magalhaes__city=Teixeira de Freitas__stateUF=BA"
+    },
+    {
+        "id": "2a5e133a-69d5-445a-94b7-271ffad14ad7",
+        "name": "Petshop da Nath",
+        "description": "Encontre o pet que combine você!",
+        "userId": "3e5e133e-69d5-445e-94e7-271ffed14ed7",
+        "phone": "",
+        "address": "zip=70830550__street=Quadra SGAN 612__number=8303__neighborhood=Asa Norte__city=Brasilia__stateUF=DF"
+    },
+    {
+        "id": "3a5e133a-69d5-445a-94b7-271ffad14ad7",
+        "name": "PetShop Admin",
+        "userId": "3a5e133a-69d5-445a-94b7-271ffad14ad7",
+        "phone": "",
+        "address": "zip=35300210__street=Vila Adelaide__number=0210__neighborhood=Santa Cruz__city=Caratinga__stateUF=MG"
+    },
+    {
+        "id": "4a5e133a-69d5-445a-94b7-271ffad14ad7",
+        "name": "Pet Kingstom",
+        "userId": "3b5b133b-69d5-445b-94b7-271ffbd14bd7",
+        "phone": "",
+        "address": "zip=93346463__street=Rua Safira__number=346__neighborhood=Petropolis__city=Novo Hamburgo__stateUF=RS"
+    }
+]

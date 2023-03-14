@@ -1,4 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import { UserException } from '@/exceptions/user';
 import { PetService } from '@/services/pet.service';
 import { Pet } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next'
@@ -18,7 +19,7 @@ export default async function handler(
         res.status(201).send({ message: "Pet created!" });
 
     } catch (error) {
-
+        
         if (error instanceof Error) {
             res.status(500).send({ error: error.message })
             return
