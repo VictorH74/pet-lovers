@@ -9,7 +9,7 @@ npm i
 
 2. Prisma migrations
 ```
-npx prisma migrate dev migrations
+npx prisma migrate dev --name migrations
 ```
 
 3. Run app
