@@ -33,3 +33,9 @@ export const formatUser = (user: Partial<User>) => {
 
   return user
 }
+
+export const getBaseUrl = (req: any) => {
+  const protocol = req.headers['x-forwarded-proto'] || 'http';
+  const host = req.headers['x-forwarded-host'] || req.headers.host;
+  return `${protocol}://${host}`;
+}
