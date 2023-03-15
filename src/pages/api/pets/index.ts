@@ -10,7 +10,9 @@ export default async function handler(
     try {
         if (req.method !== "GET") throw new Error(`Forbidden request method: ${req.method}`)
 
-        const pets = await PetService.listPets();
+        const { page = 1, limit = 10 } = req.query;
+
+        const pets = await PetService.listPets(Number(page), Number(limit));
         res.status(200).json(pets);
         
     } catch (error) {

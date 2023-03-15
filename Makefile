@@ -2,16 +2,14 @@ run_postgres:
 	docker pull postgres
 	docker run --name postgres -e POSTGRES_PASSWORD=postgres -d -p 5432:5432 postgres
 
-dev:
+start_dev:
+	npm i
+	make envs
+	make run_postgres
+	make migrate
 	npm run dev
 
-build:
-	npm run build
-
-start:
-	npm run start
-
-copy_files:
+export_jsons:
 	docker cp src/JSON/users.json postgres_db:/users.json
 	docker cp src/JSON/petshops.json postgres_db:/petshops.json
 	docker cp src/JSON/pets.json postgres_db:/pets.json
@@ -21,7 +19,7 @@ seed_tables:
 	docker exec -it postgres_db psql -U postgres -c "COPY users FROM '/users.json' DELIMITER ',' JSON '/users.json';"
 
 seed:
-	make copy_files
+	make export_jsons
 	make seed_tables
 
 users:

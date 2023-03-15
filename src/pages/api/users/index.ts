@@ -11,7 +11,9 @@ export default async function handler(
     try {
         if (req.method !== "GET") throw new UserException(`Forbidden request method: ${req.method}`)
 
-        const users = await UserService.listUsers();
+        const { page = 1, limit = 10 } = req.query;
+
+        const users = await UserService.listUsers(Number(page), Number(limit));
         res.status(200).json(users);
 
     } catch (error) {

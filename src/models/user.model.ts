@@ -12,7 +12,7 @@ export class UserModel {
         return user
     }
 
-    public static listUsers() {
+    public static listUsers(page: number, limit: number) {
         const selectFields = {
             select: {
                 id: true,
@@ -20,7 +20,9 @@ export class UserModel {
                 email: true,
                 phone: true,
                 address: true,
-            }
+            },
+            take: limit, 
+            skip: (page - 1) * limit,
         }
 
         return prisma.user.findMany(selectFields);

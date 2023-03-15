@@ -4,7 +4,7 @@ import { PrismaClient, PetShop } from '@prisma/client'
 const prisma = new PrismaClient()
 
 export class PetShopModel {
-    public static listPetshops() {
+    public static listPetshops(page: number, limit: number) {
         const selectFields = {
             select: {
                 id: true,
@@ -20,7 +20,9 @@ export class PetShopModel {
                 phone: true,
                 address: true,
                 petSpecies: true,
-            }
+            },
+            take: limit, 
+            skip: (page - 1) * limit,
         }
 
         return prisma.petShop.findMany(selectFields)

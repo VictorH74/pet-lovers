@@ -3,8 +3,8 @@ import { PetModel } from "../models/pet.model"
 
 
 export class PetService {
-    public static listPets() {
-        return PetModel.listPets()
+    public static listPets(page: number, limit: number) {
+        return PetModel.listPets(page, limit)
     }
 
     public static createPet(data: Pet) {

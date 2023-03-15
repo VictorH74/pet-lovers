@@ -4,8 +4,11 @@ import { PrismaClient, Pet } from "@prisma/client"
 const prisma = new PrismaClient()
 
 export class PetModel {
-    public static listPets() {
-        return prisma.pet.findMany()
+    public static listPets(page: number, limit: number) {
+        return prisma.pet.findMany({
+            take: limit,
+            skip: (page - 1) * limit,
+        })
     }
 
     public static createPet(data: Pet) {

@@ -12,8 +12,8 @@ export class UserService {
     return user;
   }
 
-  public static async listUsers() {
-    const user = await UserModel.listUsers();
+  public static async listUsers(page: number, limit: number) {
+    const user = await UserModel.listUsers(page, limit);
     return user;
   }
 

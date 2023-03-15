@@ -19,6 +19,15 @@ export const formatAddress = (address: string) => {
   return formattedData;
 }
 
+export const formatPhone = (phone: string): string => {
+  let phoneArray = phone.split("");
+  let ddd = phoneArray.slice(0, 2).join("")
+  let number = phoneArray.slice(2);
+  number.splice(5, 0, "-")
+  number.splice(1, 0, ".")
+  return `(${ddd}) ${number.join("")}`
+}
+
 export const formatUser = (user: Partial<User>) => {
   if (user.address) return { ...user, address: formatAddress(user.address) }
 

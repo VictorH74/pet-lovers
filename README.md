@@ -7,7 +7,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 npm i
 ```
 
-2. Prisma migrations
+2. Prisma initial migrations
 ```
 npx prisma migrate dev --name migrations
 ```

@@ -2,8 +2,8 @@ import { PetShop } from "@prisma/client";
 import { PetShopModel } from "../models/petshop.model";
 
 export class PetShopService {
-    public static listPetshops() {
-        return PetShopModel.listPetshops();
+    public static listPetshops(page: number, limit: number) {
+        return PetShopModel.listPetshops(page, limit);
     }
 
     public static createPetshop(data: Omit<PetShop, "id">) {
