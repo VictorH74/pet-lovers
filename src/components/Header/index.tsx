@@ -3,8 +3,8 @@ import { navData } from "./data"
 
 const Header = () => {
     return (
-        <div className="w-full h-20 bg-emerald-400 grid place-items-center px-[20px]">
-            <div className="flex place-content-between w-[1300px]">
+        <header className="h-20 bg-custom-emerald grid place-items-center px-[20px]">
+            <div className="flex place-content-between w-[100%] min-width">
                 <h1 className="font-righteous text-2xl text-slate-50">PetLovers</h1>
                 <div className="flex gap-x-10">
                     {navData.map(data => (
@@ -14,7 +14,7 @@ const Header = () => {
                     ))}
                 </div>
             </div>
-        </div>
+        </header>
     )
 }
 

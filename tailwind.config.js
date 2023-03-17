@@ -4,7 +4,12 @@ module.exports = {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        "custom-emerald": "#00C898",
+        "custom-blue": "#368FC1"
+      }
+    },
     fontFamily: {
       "righteous": ["Righteous", "cursive"],
       "noto-sans": ["Noto Sans", "sans-serif"],

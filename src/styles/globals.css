@@ -8,6 +8,10 @@
     box-sizing: border-box;
 }
 
-section {
+.min-width {
     max-width: 1400px;
+}
+
+.test {
+    float: inline-end;
 }

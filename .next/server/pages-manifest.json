@@ -2,9 +2,8 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/petshops": "pages/petshops.js",
-  "/api/petshops": "pages/api/petshops.js",
+  "/": "pages/index.js",
   "/petshops/[petshopId]": "pages/petshops/[petshopId].js",
   "/api/petshops/[petshopId]": "pages/api/petshops/[petshopId].js",
-  "/": "pages/index.js"
+  "/api/petshops": "pages/api/petshops.js"
 }
