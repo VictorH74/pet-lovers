@@ -3,15 +3,35 @@
 @tailwind utilities;
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 .min-width {
-    max-width: 1400px;
+  max-width: 1400px;
 }
 
 .test {
-    float: inline-end;
+  float: inline-end;
+}
+
+.icon {
+  transition: 300ms;
+}
+
+.icon:hover {
+  scale: 115%;
+}
+
+.linkedin-icon:hover {
+  color: rgb(28, 134, 255);
+}
+
+.github-icon:hover {
+  color: rgb(43, 43, 43);
+}
+
+.whatsapp-icon:hover {
+  color: rgb(44, 170, 65);
 }

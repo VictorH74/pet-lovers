@@ -32,4 +32,4 @@ prisma_studio:
 	npx prisma studio
 
 envs:
-	cp .env.example .env
+	cp .env.development .env

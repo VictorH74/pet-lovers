@@ -16,7 +16,7 @@ const PetshopCard = (props: PetShop) => {
                 <div className='grid gap-2'>
                     <div>
                         <p className='font-noto-sans text-xs text-zinc-600 font-semibold'>
-                            <LocationOnIcon /> {`${address.street}, N° ${address.number}, ${address.neighborhood}`}
+                            <LocationOnIcon /> {`${address.address}, N° ${address.number}, ${address.neighborhood}`}
                         </p>
                         <p className='font-noto-sans text-xs text-zinc-600 font-semibold'>
                             {`${address.city} - ${address.stateUF}`}

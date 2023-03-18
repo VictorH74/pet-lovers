@@ -1,5 +1,6 @@
 import Head from "next/head"
 import React from "react"
+import Footer from "../Footer"
 import Header from "../Header"
 
 const Layout: React.FC<{ children: JSX.Element }> = ({ children }) => {
@@ -12,8 +13,10 @@ const Layout: React.FC<{ children: JSX.Element }> = ({ children }) => {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <Header />
-            {children}
-            footer
+            <main className="m-auto min-h-[80vh]">
+                {children}
+            </main>
+            <Footer />
         </>
     )
 }

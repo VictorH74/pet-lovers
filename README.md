@@ -7,9 +7,19 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 npm i
 ```
 
+2. Envs
+```
+cp .env.development .env
+```
+
+3. Run postgres Image
+```
+make run_postgres
+```
+
 2. Prisma initial migrations
 ```
-npx prisma migrate dev --name migrations
+make migrate
 ```
 
 3. Run app
