@@ -1,0 +1,21 @@
+[
+        {
+            "label": "Nome",
+            "name": "name"
+        },
+        {
+            "label": "Email",
+            "name": "email",
+            "type": "email"
+        },
+        {
+            "label": "Senha",
+            "name": "password",
+            "type": "password"
+        },
+        {
+            "label": "Repetir enha",
+            "name": "password_2",
+            "type": "password"
+        }
+]

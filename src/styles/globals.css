@@ -35,3 +35,11 @@
 .whatsapp-icon:hover {
   color: rgb(44, 170, 65);
 }
+
+.header-link {
+  transition: 300ms;
+}
+
+.header-link:hover {
+  scale: 110%;
+}

@@ -4,7 +4,7 @@ import { User } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import jwt from "jsonwebtoken";
 import { UserService } from '@/services/user.service';
-import { SECRET } from '@/utils/consts';
+import { SECRET } from '@/utils/constants';
 
 type Data = {
     token: string

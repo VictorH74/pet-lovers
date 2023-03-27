@@ -1,21 +1,29 @@
-import Link from "next/link"
-import { navData } from "./data"
+import Link from "next/link";
+import Logo from "../Logo";
+import { navData } from "./data";
 
 const Header = () => {
-    return (
-        <header className="h-20 bg-custom-emerald grid place-items-center px-[20px]">
-            <div className="flex place-content-between w-[100%] min-width">
-                <h1 className="font-righteous text-2xl text-slate-50">PetLovers</h1>
-                <div className="flex gap-x-10">
-                    {navData.map(data => (
-                        <Link key={data.title} href={data.path}>
-                            <p className="text-slate-50 font-noto-sans text-lg">{data.title}</p>
-                        </Link>
-                    ))}
-                </div>
-            </div>
-        </header>
-    )
-}
+  return (
+    <header className="h-20 bg-custom-emerald grid place-items-center px-[20px]">
+      <div className="flex place-content-between w-[100%] min-width">
+        <Logo />
+        <div className="flex gap-x-10 items-center">
+          {navData.map((data) => (
+            <Link className="header-link" key={data.title} href={data.path}>
+              <p className="text-slate-50 font-noto-sans text-lg uppercase">
+                {data.title}
+              </p>
+            </Link>
+          ))}
+        </div>
+        <div>
+          <button className="bg-custom-blue px-7 py-2 rounded-md text-slate-50 uppercase">
+            Loggin
+          </button>
+        </div>
+      </div>
+    </header>
+  );
+};
 
-export default Header
+export default Header;
