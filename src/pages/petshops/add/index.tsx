@@ -4,19 +4,35 @@ import { Form, Formik } from "formik";
 import data from "./data.json";
 import { Schema } from "./validationSchema";
 import { TextField } from "@mui/material";
-import { ChangeEvent, useEffect, useState } from "react";
+import { useState } from "react";
 import { API_KEY } from "@/utils/constants";
 import { useDebounce } from "react-use";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
 
 const apiKey = API_KEY;
 const geocodeJson = "https://maps.googleapis.com/maps/api/geocode/json";
 
+type ErrorMsg = {
+  emptyLocation: string | null;
+};
+
+interface IFormValues {
+  name: string;
+  description: string;
+  website: string;
+  phone: string;
+}
+
 const PetshopRegister = () => {
   const [response, setResponse] = useState<any[]>([]);
   const [addressValue, setAddress] = useState("");
+  const [selectedAddress, setSelectedAddress] = useState<string | undefined>(
+    undefined
+  );
   const [location, setLocation] = useState<string | undefined>(undefined);
-
-  useEffect(() => console.log(location), [location]);
+  const [errorMsg, setErrorMsg] = useState<ErrorMsg>({
+    emptyLocation: null,
+  });
 
   const [, cancel] = useDebounce(
     () => {
@@ -42,7 +58,7 @@ const PetshopRegister = () => {
       ).json();
 
       let { results } = res;
-      console.log(results);
+      // console.log(results);
       setResponse(results);
     } catch (e) {
       alert("Geocode was not successful for the following reason: " + e);
@@ -51,6 +67,18 @@ const PetshopRegister = () => {
 
   const formatLocation = (obj: { lat: number; lng: number }) => {
     return `lat=${obj.lat}__lgn=${obj.lng}`;
+  };
+
+  const handleSubmit = (values: IFormValues) => {
+    if (!location) {
+      setErrorMsg((prev) => ({
+        ...prev,
+        emptyLocation: "Nenhum endereço selecionado",
+      }));
+    }
+
+    let finalValues = { ...values, location };
+    console.log(finalValues);
   };
 
   return (
@@ -68,19 +96,11 @@ const PetshopRegister = () => {
             description: "",
             website: "",
             phone: "",
-            address: "",
           }}
           validationSchema={Schema}
-          onSubmit={(values) => console.log(values)}
+          onSubmit={handleSubmit}
         >
-          {({
-            values,
-            errors,
-            touched,
-            handleChange,
-            handleBlur,
-            setFieldValue,
-          }) => (
+          {({ values, errors, touched, handleChange, handleBlur }) => (
             <Form>
               <div className="grid gap-4">
                 <Fields
@@ -93,6 +113,7 @@ const PetshopRegister = () => {
                 />
                 <TextField
                   autoComplete="none"
+                  placeholder={addressValue || "Digite seu endereço"}
                   sx={textFieldStyle}
                   variant={"standard"}
                   className="text-white"
@@ -104,23 +125,26 @@ const PetshopRegister = () => {
                     let { value } = e.target;
                     setAddress(value);
                   }}
-                  onBlur={handleBlur}
                 />
-                {errors["address" as keyof typeof errors] &&
-                  touched["address" as keyof typeof touched] && (
-                    <p className="text-right text-red-500 font-semibold uppercase text-xs">
-                      {String(errors["address" as keyof typeof errors])}
+                {selectedAddress ? (
+                  <span className="flex items-center text-xs mt-0 text-left text-white w-fit p-[4px] rounded-md bg-custom-blue font-semibold">
+                    <LocationOnIcon /> {selectedAddress}
+                  </span>
+                ) : (
+                  errorMsg.emptyLocation && (
+                    <p className="text-right text-custom-red font-semibold uppercase text-xs">
+                      {errorMsg.emptyLocation}
                     </p>
-                  )}
+                  )
+                )}
               </div>
               <div className="">
                 <pre className="shadow-md rounded-lg mt-2 overflow-hidden text-left">
                   {response.map((address, index) => (
                     <p
-                      className="hover:bg-custom-blue text-custom-gray p-2 hover:text-white cursor-pointer duration-150 truncate"
+                      className="hover:bg-custom-blue text-white text-[12px] p-2 flex items-center cursor-pointer duration-150 truncate"
                       onClick={() => {
-                        setFieldValue("address", address.formatted_address);
-                        setAddress(address.formatted_address);
+                        setSelectedAddress(address.formatted_address);
                         setLocation(
                           formatLocation(address?.geometry?.location)
                         );
@@ -129,12 +153,15 @@ const PetshopRegister = () => {
                       }}
                       key={index}
                     >
-                      {address.formatted_address}
+                      <LocationOnIcon /> {address.formatted_address}
                     </p>
                   ))}
                 </pre>
               </div>
-              <button className="bg-custom-blue uppercase mt-10 px-10 py-3 rounded-3xl">
+              <button
+                type="submit"
+                className="bg-custom-blue uppercase mt-10 px-10 py-3 rounded-3xl"
+              >
                 Cadastrar
               </button>
             </Form>

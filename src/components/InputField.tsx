@@ -22,8 +22,13 @@ interface Props {
 
 export const textFieldStyle: SxProps = {
   width: "100%",
+  "& input": {
+    color: "#555555",
+  },
+  '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
+    backgroundColor: 'transparent',
+  },
   "& .MuiInput-underline:after": {
-    color: "white",
     borderBottomColor: "#368FC1",
   },
   "& .MuiInput-underline:before": {
@@ -72,7 +77,7 @@ const Fields: React.FC<Props> = ({
           />
           {errors[field.name as keyof typeof errors] &&
             touched[field.name as keyof typeof touched] && (
-              <p className="text-right text-red-500 font-semibold uppercase text-xs">
+              <p className="text-right text-custom-red font-semibold uppercase text-xs">
                 {String(errors[field.name as keyof typeof errors])}
               </p>
             )}

@@ -14,7 +14,7 @@
             "type": "password"
         },
         {
-            "label": "Repetir enha",
+            "label": "Repetir senha",
             "name": "password_2",
             "type": "password"
         }

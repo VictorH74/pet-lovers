@@ -17,7 +17,4 @@ export const Schema = Yup.object().shape({
     .min(5, "Muito curto")
     .max(50, "Muito grande")
     .required("Obrigatório"),
-  address: Yup.string()
-    .min(5, "Muito curto")
-    .required("Obrigatório"),
 });

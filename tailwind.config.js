@@ -9,7 +9,7 @@ module.exports = {
         "custom-emerald": "#00C898",
         "custom-blue": "#368FC1",
         "custom-gray": "#5E5E5E",
-        "custom-red": "#F55C5C",
+        "custom-red": "#e93838",
       }
     },
     fontFamily: {

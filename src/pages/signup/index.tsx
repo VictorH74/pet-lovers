@@ -8,7 +8,16 @@ import Image from "next/image";
 const googleSvg =
   "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg";
 
+interface IFormValues {
+  name: string;
+  email: string;
+  password: string;
+}
+
 const UserRegister = () => {
+  const handleSubmit = (values: IFormValues) => {
+    console.log(values);
+  };
   return (
     <div className="">
       <main className="bg-custom-emerald max-w-[482px] rounded-lg text-center text-white m-auto my-16">
@@ -30,9 +39,13 @@ const UserRegister = () => {
             <div className="bg-white h-[2px] w-full" />
           </div>
           <Formik
-            initialValues={{}}
+            initialValues={{
+              name: "",
+              email: "",
+              password: "",
+            }}
             validationSchema={Schema}
-            onSubmit={(values) => console.log(values)}
+            onSubmit={handleSubmit}
           >
             {({ values, errors, touched, handleChange, handleBlur }) => (
               <Form>
