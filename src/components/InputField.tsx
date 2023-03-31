@@ -6,6 +6,7 @@ import type {
   FormikTouched,
   FormikHandlers,
 } from "formik";
+import type { SxProps } from "@mui/material";
 
 interface Props {
   fieldArray: { label: string; name: string; type?: string }[];
@@ -18,6 +19,28 @@ interface Props {
   errors: FormikErrors<FormikValues>;
   touched: FormikTouched<FormikValues>;
 }
+
+export const textFieldStyle: SxProps = {
+  width: "100%",
+  "& .MuiInput-underline:after": {
+    color: "white",
+    borderBottomColor: "#368FC1",
+  },
+  "& .MuiInput-underline:before": {
+    borderBottomColor: "white",
+  },
+  "& .MuiOutlinedInput-root": {
+    "& fieldset": {
+      borderColor: "white",
+    },
+    "&:hover fieldset": {
+      borderColor: "#368FC1",
+    },
+    "&.Mui-focused fieldset": {
+      borderColor: "#368FC1",
+    },
+  },
+};
 
 const Fields: React.FC<Props> = ({
   fieldArray,
@@ -32,25 +55,9 @@ const Fields: React.FC<Props> = ({
   return (
     <>
       {fieldArray.map((field) => (
-        <div key={field.name}>
+        <React.Fragment key={field.name}>
           <TextField
-            sx={{
-              width: "100%",
-              "& .MuiInput-underline:before": {
-                borderBottomColor: "white",
-              },
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": {
-                  borderColor: "white",
-                },
-                "&:hover fieldset": {
-                  borderColor: "#368FC1",
-                },
-                "&.Mui-focused fieldset": {
-                  borderColor: "#368FC1",
-                },
-              },
-            }}
+            sx={textFieldStyle}
             variant={fieldVariant || "standard"}
             className="text-white"
             label={
@@ -69,7 +76,7 @@ const Fields: React.FC<Props> = ({
                 {String(errors[field.name as keyof typeof errors])}
               </p>
             )}
-        </div>
+        </React.Fragment>
       ))}
     </>
   );

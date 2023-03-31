@@ -24,7 +24,7 @@ const RegisterPetshop = () => (
           nosso criador de petshop.
         </h2>
         <Link
-          href="/register-petshop"
+          href="/petshops/add"
           className="
             text-white 
             bg-custom-blue 

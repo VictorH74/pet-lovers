@@ -17,31 +17,5 @@
             "name": "phone",
             "type": "phone"
         }
-    ],
-    [
-        {
-            "label": "Cep",
-            "name": "zipcode"
-        },
-        {
-            "label": "Bairro",
-            "name": "neighborhood"
-        },
-        {
-            "label": "Número",
-            "name": "number"
-        },
-        {
-            "label": "Cidade",
-            "name": "city"
-        },
-        {
-            "label": "Rua",
-            "name": "street"
-        },
-        {
-            "label": "Estado (UF)",
-            "name": "stateUF"
-        }
     ]
 ]

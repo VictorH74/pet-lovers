@@ -30,12 +30,12 @@ model Pet {
 
 model PetShop {
   id          String   @id @default(uuid())
-  name        String
-  description String?
+  name        String   @db.VarChar(50)
+  description String?  @db.VarChar(70)
   owner       User     @relation(fields: [userId], references: [id])
   userId      String   @unique
-  website     String?
-  phone       String
+  website     String?  @db.VarChar(50)
+  phone       String   @db.VarChar(11)
   address     String
   createdAt   DateTime @default(now())
   petSpecies  String[] @default([])
@@ -46,10 +46,10 @@ model PetShop {
 
 model User {
   id       String   @id @default(uuid())
-  name     String
+  name     String   @db.VarChar(100)
   email    String   @unique
   password String
-  phone    String?
+  phone    String?  @db.VarChar(11)
   address  String?
   petshop  PetShop?
 }

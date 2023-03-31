@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 const prisma = new PrismaClient()
 
 export class UserModel {
-    public static async getUserToken({ email }: Pick<User, "email">): Promise<User | null> {
+    public static async getUserByEmail(email: string): Promise<User | null> {
         const user = await prisma.user.findUnique({
             where: { email },
         });

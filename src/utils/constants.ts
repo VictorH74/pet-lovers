@@ -1,1 +1,1 @@
-export const SECRET = process.env.SECRET_KEY || (() => { throw new Error('SECRET_KEY not defined') })();
+export const API_KEY = process.env.API_KEY || (() => { throw new Error('GOOGLE_MAPS_API_KEY not defined') })();

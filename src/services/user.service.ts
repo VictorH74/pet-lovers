@@ -2,8 +2,8 @@ import { UserModel } from '../models/user.model';
 import { User } from '@prisma/client';
 
 export class UserService {
-  public static async getUserToken(email: Pick<User, "email">): Promise<User | null> {
-    const user = await UserModel.getUserToken(email);
+  public static async getUserByEmail(email: string): Promise<User | null> {
+    const user = await UserModel.getUserByEmail(email);
     return user;
   }
 

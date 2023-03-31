@@ -9,6 +9,10 @@ start_dev:
 	make migrate
 	npm run dev
 
+run_dev:
+	docker start postgres
+	npm run dev
+
 export_jsons:
 	docker cp src/JSON/users.json postgres_db:/users.json
 	docker cp src/JSON/petshops.json postgres_db:/petshops.json
