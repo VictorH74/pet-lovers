@@ -2,7 +2,7 @@
 .next
 .vscode
 
-migrations
+/prisma/migrations
 
 # dependencies
 /node_modules
@@ -31,7 +31,7 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # local env files
-.env*.local
+.env
 
 # vercel
 .vercel

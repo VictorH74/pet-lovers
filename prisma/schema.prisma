@@ -45,11 +45,12 @@ model PetShop {
 }
 
 model User {
-  id       String   @id @default(uuid())
-  name     String   @db.VarChar(100)
-  email    String   @unique
-  password String
-  phone    String?  @db.VarChar(11)
-  address  String?
-  petshop  PetShop?
+  id        String   @id @default(uuid())
+  name      String   @db.VarChar(100)
+  email     String   @unique
+  password  String
+  phone     String?  @db.VarChar(11)
+  address   String?
+  petshop   PetShop?
+  createdAt DateTime @default(now())
 }

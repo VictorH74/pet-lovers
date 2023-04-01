@@ -4,6 +4,9 @@ import { Form, Formik } from "formik";
 import { Schema } from "./validationSchema";
 import data from "./data.json";
 import Image from "next/image";
+import useUser from "@/lib/useUser";
+import fetchJson, { FetchError } from "@/lib/fetchJson";
+import { useRouter } from "next/router";
 
 const googleSvg =
   "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg";
@@ -14,9 +17,33 @@ interface IFormValues {
 }
 
 const Login = () => {
-  const handleSubmit = (values: IFormValues) => {
-    console.log(values)
+  const { user, mutateUser } = useUser({
+    redirectTo: "/",
+    redirectIfFound: true,
+  });
+  const router = useRouter()
+
+  const handleSubmit = async (values: IFormValues) => {
+    try {
+      mutateUser(
+        await fetchJson("/api/users/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(values),
+        }),
+        false
+      );
+    } catch (error) {
+      if (error instanceof FetchError) {
+        // setErrorMsg(error.data.message);
+        console.log(error.data.message);
+      } else {
+        console.error("An unexpected error happened:", error);
+      }
+    }
   };
+
+  if (user) router.replace("/")
 
   return (
     <div className="">
@@ -30,7 +57,7 @@ const Login = () => {
           <Formik
             initialValues={{
               email: "",
-              password: ""
+              password: "",
             }}
             validationSchema={Schema}
             onSubmit={handleSubmit}

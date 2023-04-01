@@ -8,6 +8,11 @@ import { useState } from "react";
 import { API_KEY } from "@/utils/constants";
 import { useDebounce } from "react-use";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
+import { User } from "@prisma/client";
+import { withIronSessionSsr } from "iron-session/next";
+import { GetServerSidePropsContext } from "next";
+import { sessionOptions } from "@/lib/session";
+import { useRouter } from "next/router";
 
 const apiKey = API_KEY;
 const geocodeJson = "https://maps.googleapis.com/maps/api/geocode/json";
@@ -23,7 +28,7 @@ interface IFormValues {
   phone: string;
 }
 
-const PetshopRegister = () => {
+const PetshopRegister = ({ user }: { user: User }) => {
   const [response, setResponse] = useState<any[]>([]);
   const [addressValue, setAddress] = useState("");
   const [selectedAddress, setSelectedAddress] = useState<string | undefined>(
@@ -33,6 +38,7 @@ const PetshopRegister = () => {
   const [errorMsg, setErrorMsg] = useState<ErrorMsg>({
     emptyLocation: false,
   });
+  const router = useRouter()
 
   useDebounce(
     () => {
@@ -80,6 +86,8 @@ const PetshopRegister = () => {
     let finalValues = { ...values, location };
     console.log(finalValues);
   };
+
+  if (!user) router.replace("/login")
 
   return (
     <div>
@@ -176,5 +184,28 @@ const PetshopRegister = () => {
     </div>
   );
 };
+
+export const getServerSideProps = withIronSessionSsr(async function ({
+  req,
+  res,
+}: GetServerSidePropsContext) {
+  const user = req.session.user;
+
+  if (user === undefined) {
+    res.setHeader("location", "/login");
+    res.statusCode = 302;
+    res.end();
+    return {
+      props: {
+        user: null,
+      },
+    };
+  }
+
+  return {
+    props: { user: req.session.user },
+  };
+},
+sessionOptions);
 
 export default PetshopRegister;

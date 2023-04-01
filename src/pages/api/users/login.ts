@@ -3,22 +3,14 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { User } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { UserService } from "@/services/user.service";
-// import jwt from "jsonwebtoken";
-// import { SECRET } from "@/utils/constants";
-
-// NEW
 import { withIronSessionApiRoute } from "iron-session/next";
 import { sessionOptions } from "@/lib/session";
-
-// type Data = {
-//   token: string;
-// };
 
 export default withIronSessionApiRoute(loginRoute, sessionOptions);
 
 async function loginRoute(
   req: NextApiRequest,
-  res: NextApiResponse<{ ok: boolean } | { error: string }>
+  res: NextApiResponse<User | { error: string }>
 ) {
   try {
     const userData: Pick<User, "email" | "password"> = await req.body;
@@ -36,7 +28,7 @@ async function loginRoute(
     // NEW
     req.session.user = user;
     await req.session.save();
-    return res.send({ ok: true });
+    return res.send(user);
 
     // const token = jwt.sign({ userId: user.id }, SECRET, { expiresIn: "1h" });
 

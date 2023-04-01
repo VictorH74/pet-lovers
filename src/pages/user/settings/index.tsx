@@ -4,12 +4,15 @@ import { User } from "@prisma/client";
 import { withIronSessionSsr } from "iron-session/next";
 import { GetServerSidePropsContext } from "next";
 
-const data = ["Nome", "Email", "Telefone", "Criado em"];
+const data = [
+  {label: "Nome", value: "name"},
+  {label: "Email", value: "email"},
+  {label: "Telefone", value: "phone"},
+  {label: "Criado Em", value: "createAt"},
+];
 
 const UserSettings = ({ user }: { user: User }) => {
   const setData = () => alert("Em desenvolvimento");
-  console.log(user)
-
   const deleteAccount = () => alert("Em desenvolvimento");
 
   return (
@@ -20,8 +23,8 @@ const UserSettings = ({ user }: { user: User }) => {
           <div className="bg-white w-[2px] h-[100%]" />
           <div className="grid gap-4">
             {data.map((d) => (
-              <p key={d} className="text-white">
-                {d}: -
+              <p key={d.label} className="text-white">
+                {`${d.label}: ${user[d.value as keyof typeof user] || "-"}`}
               </p>
             ))}
           </div>
@@ -57,7 +60,7 @@ export const getServerSideProps = withIronSessionSsr(async function ({
     res.end();
     return {
       props: {
-        user: undefined,
+        user: null,
       },
     };
   }
