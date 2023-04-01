@@ -13,7 +13,7 @@ const apiKey = API_KEY;
 const geocodeJson = "https://maps.googleapis.com/maps/api/geocode/json";
 
 type ErrorMsg = {
-  emptyLocation: string | null;
+  emptyLocation: boolean;
 };
 
 interface IFormValues {
@@ -31,10 +31,10 @@ const PetshopRegister = () => {
   );
   const [location, setLocation] = useState<string | undefined>(undefined);
   const [errorMsg, setErrorMsg] = useState<ErrorMsg>({
-    emptyLocation: null,
+    emptyLocation: false,
   });
 
-  const [, cancel] = useDebounce(
+  useDebounce(
     () => {
       if (!addressValue) return;
       geocode();
@@ -73,7 +73,7 @@ const PetshopRegister = () => {
     if (!location) {
       setErrorMsg((prev) => ({
         ...prev,
-        emptyLocation: "Nenhum endereço selecionado",
+        emptyLocation: true,
       }));
     }
 
@@ -125,6 +125,12 @@ const PetshopRegister = () => {
                     let { value } = e.target;
                     setAddress(value);
                   }}
+                  onBlur={() =>
+                    setErrorMsg((prev) => ({
+                      ...prev,
+                      emptyLocation: !!location,
+                    }))
+                  }
                 />
                 {selectedAddress ? (
                   <span className="flex items-center text-xs mt-0 text-left text-white w-fit p-[4px] rounded-md bg-custom-blue font-semibold">
@@ -133,7 +139,7 @@ const PetshopRegister = () => {
                 ) : (
                   errorMsg.emptyLocation && (
                     <p className="text-right text-custom-red font-semibold uppercase text-xs">
-                      {errorMsg.emptyLocation}
+                      Nenhum endereço selecionado
                     </p>
                   )
                 )}
@@ -148,7 +154,6 @@ const PetshopRegister = () => {
                         setLocation(
                           formatLocation(address?.geometry?.location)
                         );
-                        cancel();
                         clear();
                       }}
                       key={index}
