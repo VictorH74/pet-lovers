@@ -11,13 +11,13 @@ interface Props {
 }
 
 export default function Petshop({ petshopData: p }: Props) {
-  console.log(p)
   const router = useRouter();
   const libraries = useMemo(() => ["places"], []);
-  const mapCenter = useMemo(
-    () => ({ lat: -5.187232, lng: -42.782848 }),
-    []
-  );
+
+  const location = formatAddress(p.location);
+  console.log(location);
+
+  const mapCenter = { lat: location.lat, lng: location.lng };
 
   const mapOptions = useMemo<google.maps.MapOptions>(
     () => ({
@@ -33,16 +33,12 @@ export default function Petshop({ petshopData: p }: Props) {
     libraries: libraries as any,
   });
 
-  const { zip, address, number, neighborhood, city, stateUF } = formatAddress(
-    p.address
-  );
-
   if (router.isFallback || !isLoaded) {
     return <div>Loading...</div>;
   }
 
   return (
-    <main className="min-width m-auto pt-6 grid gap-5">
+    <main className="min-width m-auto pt-6 grid gap-5 @container">
       <div className="bg-custom-blue p-14 rounded-xl text-center text-white">
         <h1 className="text-3xl">{p.name}</h1>
         {p.description && (
@@ -52,23 +48,31 @@ export default function Petshop({ petshopData: p }: Props) {
           </>
         )}
       </div>
-      <div className="border-2 rounded-md border-custom-blue flex flex-row">
-        <GoogleMap
-          options={mapOptions}
-          zoom={14}
-          center={mapCenter}
-          mapTypeId={google.maps.MapTypeId.ROADMAP}
-          mapContainerStyle={{ width: "653px", height: "390px" }}
-          onLoad={() => console.log("Map Component Loaded...")}
-        >
-          <MarkerF position={mapCenter} onLoad={() => console.log('Marker Loaded')} />
-        </GoogleMap>
-        <div className="p-4">
-          <p>{zip}</p>
-          <p>{`${address}, N° ${number}, ${city} - ${stateUF}`}</p>
-          <p className="text-stone-600">
-            <StarIcon sx={{ color: "#F6E757" }} /> 4.7
-          </p>
+      <div className="border-2 rounded-md border-custom-blue flex flex-wrap-reverse @container">
+        <div className="aspect-video @[860px]:w-[650px] w-[650px] flex-auto">
+          <GoogleMap
+            options={mapOptions}
+            zoom={14}
+            center={mapCenter}
+            mapTypeId={google.maps.MapTypeId.ROADMAP}
+            mapContainerStyle={{ width: "100%", height: "100%" }}
+            onLoad={() => console.log("Map Component Loaded...")}
+          >
+            <MarkerF
+              position={mapCenter}
+              onLoad={() => console.log("Marker Loaded")}
+            />
+          </GoogleMap>
+        </div>
+
+        <div className="p-4 flex-[1_1_200px] @[860px]:text-left text-center">
+          <p className="text-stone-600 pl-2">{location.address}</p>
+          <div className="relative w-fit @[860px]:m-0 m-auto">
+            <StarIcon sx={{ color: "#ffbb00", fontSize: 80 }} />
+            <p className="absolute text-lg text-white font-bold top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+              4.7
+            </p>
+          </div>
         </div>
       </div>
     </main>

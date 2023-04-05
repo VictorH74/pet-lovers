@@ -1,6 +1,11 @@
+include .env
+
+test:
+	echo ${DATABASE_URL}
+
 run_postgres:
 	docker pull postgres
-	docker run --name postgres -e POSTGRES_PASSWORD=postgres -d -p 5432:5432 postgres
+	docker run --name ${DB_CONTAINER_NAME} -e POSTGRES_PASSWORD=${DB_PASS} -d -p ${DB_PORT}:5432 postgres
 
 start_dev:
 	npm i
@@ -13,21 +18,36 @@ run_dev:
 	docker start postgres
 	npm run dev
 
-export_jsons:
-	docker cp src/JSON/users.json postgres_db:/users.json
-	docker cp src/JSON/petshops.json postgres_db:/petshops.json
-	docker cp src/JSON/pets.json postgres_db:/pets.json
+export_data:
+	docker cp initial_data postgres:/initial_data/
 
 seed_tables:
 	# docker exec -it postgres_db psql -U postgres -c "SET client_encoding to 'UTF8';"
-	docker exec -it postgres_db psql -U postgres -c "COPY users FROM '/users.json' DELIMITER ',' JSON '/users.json';"
 
 seed:
-	make export_jsons
-	make seed_tables
+	docker cp initial_data postgres:/initial_data/
+	docker exec -it postgres bash -c "psql -U postgres -d PetLovers -f /initial_data/data.sql;"
 
-users:
-	docker exec -it postgres_db psql -U postgres -c "SELECT * FROM user;"
+rm_data:
+	docker exec -it postgres bash -c "rm -r /initial_data"
+
+reset_seed:
+	make rm_data
+	make seed
+
+remove_all_user:
+	docker exec -it postgres psql -U postgres -d PetLovers -c 'TRUNCATE TABLE "User" CASCADE;'
+
+remove_all_petshop:
+	docker exec -it postgres psql -U postgres -d PetLovers -c 'TRUNCATE TABLE "PetShop" CASCADE;'
+
+remove_all_pet:
+	docker exec -it postgres psql -U postgres -d PetLovers -c 'TRUNCATE TABLE "Pet" CASCADE;'
+
+remove_all_data:
+	make remove_all_user
+	make remove_all_petshop
+	make remove_all_pet
 
 migrate:
 	npx prisma migrate dev --name migrations

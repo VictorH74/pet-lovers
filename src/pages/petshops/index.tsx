@@ -31,7 +31,7 @@ export default function PetshopList() {
 
   return (
     <section className="text-center m-auto w-[100%]">
-      <div className="grid grid-cols-4 place-items-center gap-5 my-[30px]">
+      <div className="flex flex-wrap justify-center gap-5 my-[30px]">
         {petshops.map((petshop) => (
           <PetshopCard key={petshop.id} {...petshop} />
         ))}

@@ -36,7 +36,7 @@ model PetShop {
   userId      String   @unique
   website     String?  @db.VarChar(50)
   phone       String   @db.VarChar(11)
-  address     String
+  location     String
   createdAt   DateTime @default(now())
   petSpecies  String[] @default([])
   // rating      Rate?    @relation(fields: [rateId], references: [id])

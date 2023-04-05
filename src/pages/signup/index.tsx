@@ -4,6 +4,8 @@ import { Form, Formik } from "formik";
 import { Schema } from "./validationSchema";
 import data from "./data.json";
 import Image from "next/image";
+import fetchJson from "@/lib/fetchJson";
+import { useRouter } from "next/router";
 
 const googleSvg =
   "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg";
@@ -15,12 +17,21 @@ interface IFormValues {
 }
 
 const UserRegister = () => {
-  const handleSubmit = (values: IFormValues) => {
-    console.log(values);
+  const router = useRouter()
+  const handleSubmit = async (values: IFormValues) => {
+    // console.log(values);
+    let res = await fetchJson("api/users/add", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(values)
+    })
+    console.log(res)
+    alert("Conta criada com sucesso!")
+    router.replace("/login")
   };
   return (
-    <div className="">
-      <main className="bg-custom-emerald max-w-[482px] rounded-lg text-center text-white m-auto my-16">
+    <div className="@container">
+      <main className="bg-custom-emerald max-w-[482px] @[500px]:rounded-lg text-center text-white m-auto @[500px]:my-[4%]">
         <div className="p-[12%]">
           <div className="mb-8">
             <Logo />
@@ -60,7 +71,7 @@ const UserRegister = () => {
                     handleBlur={handleBlur}
                   />
                 </div>
-                <button className="bg-custom-blue uppercase px-10 py-3 rounded-3xl hover:px-32 duration-500">
+                <button className="bg-custom-blue uppercase px-10 py-3 rounded-3xl hover:px-14 duration-200">
                   cadastrar
                 </button>
               </Form>

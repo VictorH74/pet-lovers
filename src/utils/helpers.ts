@@ -9,14 +9,11 @@ export function formatDate(date: Date): string {
 
 export const formatAddress = (address: string) => {
   let addressArray = address.split("__");
-  let formattedData: { [key: string]: string } = {};
-  addressArray.forEach(data => {
-    let [key, value] = data.split("=");
-    if (key !== undefined && value !== undefined) {
-      formattedData[key] = value;
-    }
-  });
-  return formattedData;
+  return {
+    lat: Number(addressArray[0]),
+    lng: Number(addressArray[1]),
+    address: addressArray[2],
+  }
 }
 
 export const formatPhone = (phone: string): string => {

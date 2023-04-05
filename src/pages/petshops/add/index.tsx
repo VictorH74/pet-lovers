@@ -8,11 +8,10 @@ import { useState } from "react";
 import { API_KEY } from "@/utils/constants";
 import { useDebounce } from "react-use";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import { User } from "@prisma/client";
-import { withIronSessionSsr } from "iron-session/next";
-import { GetServerSidePropsContext } from "next";
-import { sessionOptions } from "@/lib/session";
+import { PetShop, User } from "@prisma/client";
 import { useRouter } from "next/router";
+import fetchJson from "@/lib/fetchJson";
+import useUser from "@/lib/useUser";
 
 const apiKey = API_KEY;
 const geocodeJson = "https://maps.googleapis.com/maps/api/geocode/json";
@@ -28,17 +27,20 @@ interface IFormValues {
   phone: string;
 }
 
-const PetshopRegister = ({ user }: { user: User }) => {
+const PetshopRegister = () => {
+  const { user } = useUser({ redirectTo: "/signup" });
   const [response, setResponse] = useState<any[]>([]);
   const [addressValue, setAddress] = useState("");
   const [selectedAddress, setSelectedAddress] = useState<string | undefined>(
     undefined
   );
-  const [location, setLocation] = useState<string | undefined>(undefined);
+  const [location, setLocation] = useState<
+    { lat: number; lng: number; address: string } | undefined
+  >(undefined);
   const [errorMsg, setErrorMsg] = useState<ErrorMsg>({
     emptyLocation: false,
   });
-  const router = useRouter()
+  const router = useRouter();
 
   useDebounce(
     () => {
@@ -64,18 +66,13 @@ const PetshopRegister = ({ user }: { user: User }) => {
       ).json();
 
       let { results } = res;
-      // console.log(results);
       setResponse(results);
     } catch (e) {
       alert("Geocode was not successful for the following reason: " + e);
     }
   };
 
-  const formatLocation = (obj: { lat: number; lng: number }) => {
-    return `lat=${obj.lat}__lgn=${obj.lng}`;
-  };
-
-  const handleSubmit = (values: IFormValues) => {
+  const handleSubmit = async (values: IFormValues) => {
     if (!location) {
       setErrorMsg((prev) => ({
         ...prev,
@@ -83,11 +80,22 @@ const PetshopRegister = ({ user }: { user: User }) => {
       }));
     }
 
-    let finalValues = { ...values, location };
-    console.log(finalValues);
+    let finalValues = {
+      ...values,
+      location: JSON.stringify(location),
+      userId: user?.id,
+    };
+    // console.log(finalValues)
+
+    let res: Pick<PetShop, "id"> = await fetchJson("/api/petshops/add/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(finalValues),
+    });
+    router.replace(`petshops/${res.id}`);
   };
 
-  if (!user) router.replace("/login")
+  if (!user) router.replace("/signup");
 
   return (
     <div>
@@ -97,7 +105,7 @@ const PetshopRegister = ({ user }: { user: User }) => {
           <div className="bg-white h-[2px] w-16 m-auto" />
           <h2 className="text-2xl font-light">cadastro petshop</h2>
         </div>
-        <p className="font-light">Proprietário: -</p>
+        <p className="font-light">Proprietário: {user?.name}</p>
         <Formik
           initialValues={{
             name: "",
@@ -142,7 +150,8 @@ const PetshopRegister = ({ user }: { user: User }) => {
                 />
                 {selectedAddress ? (
                   <span className="flex items-center text-xs mt-0 text-left text-white w-fit p-[4px] rounded-md bg-custom-blue font-semibold">
-                    <LocationOnIcon /> {selectedAddress}
+                    <LocationOnIcon />
+                    &nbsp;{selectedAddress}
                   </span>
                 ) : (
                   errorMsg.emptyLocation && (
@@ -159,14 +168,16 @@ const PetshopRegister = ({ user }: { user: User }) => {
                       className="hover:bg-custom-blue text-white text-[12px] p-2 flex items-center cursor-pointer duration-150 truncate"
                       onClick={() => {
                         setSelectedAddress(address.formatted_address);
-                        setLocation(
-                          formatLocation(address?.geometry?.location)
-                        );
+                        setLocation({
+                          ...address?.geometry?.location,
+                          address: address.formatted_address,
+                        });
                         clear();
                       }}
                       key={index}
                     >
-                      <LocationOnIcon /> {address.formatted_address}
+                      <LocationOnIcon />
+                      &nbsp;{address.formatted_address}
                     </p>
                   ))}
                 </pre>
@@ -184,28 +195,5 @@ const PetshopRegister = ({ user }: { user: User }) => {
     </div>
   );
 };
-
-export const getServerSideProps = withIronSessionSsr(async function ({
-  req,
-  res,
-}: GetServerSidePropsContext) {
-  const user = req.session.user;
-
-  if (user === undefined) {
-    res.setHeader("location", "/login");
-    res.statusCode = 302;
-    res.end();
-    return {
-      props: {
-        user: null,
-      },
-    };
-  }
-
-  return {
-    props: { user: req.session.user },
-  };
-},
-sessionOptions);
 
 export default PetshopRegister;

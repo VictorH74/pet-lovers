@@ -43,17 +43,17 @@ const Header = () => {
     }
 
     prevOpen.current = open;
-  }, [open]);
+  }, [open])
 
   const logout = async () => {
     await fetchJson("/api/users/logout", { method: "POST" })
     mutateUser(undefined, false);
-    router.push("/login");
+    router.replace("/login");
   };
 
   return (
     <header className="h-20 bg-custom-emerald grid place-items-center px-[20px]">
-      <div className="flex place-content-between w-[100%] min-width">
+      <div className="flex flex-wrap place-content-between w-[100%] min-width">
         <Logo />
         <div className="flex gap-x-10 items-center">
           {navData.map((data) => (

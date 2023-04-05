@@ -18,5 +18,7 @@ module.exports = {
       "work-sans": ["Work Sans", "sans-serif"]
     }
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/container-queries'),
+  ],
 }

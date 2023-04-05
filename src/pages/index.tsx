@@ -5,6 +5,7 @@ import ThreeFirstPetshops from "@/components/sections/ThreeFirstPetshops";
 
 
 export default function Home() {
+  console.log(process.env.TEST)
   return (
     <div>
       <Presentation />

@@ -21,7 +21,7 @@ const Login = () => {
     redirectTo: "/",
     redirectIfFound: true,
   });
-  const router = useRouter()
+  const router = useRouter();
 
   const handleSubmit = async (values: IFormValues) => {
     try {
@@ -43,11 +43,12 @@ const Login = () => {
     }
   };
 
-  if (user) router.replace("/")
+  if (user) router.replace("/");
+
 
   return (
-    <div className="">
-      <main className="bg-custom-emerald max-w-[482px] text-center text-white m-auto my-16 rounded-lg">
+    <div className="@container">
+      <main className="bg-custom-emerald max-w-[482px] text-center text-white m-auto @[500px]:my-[4%] @[500px]:rounded-lg">
         <div className="p-[12%]">
           <div className="mb-8">
             <Logo />
@@ -77,7 +78,7 @@ const Login = () => {
                 </div>
                 <button
                   type="submit"
-                  className="bg-custom-blue uppercase px-10 py-3 rounded-3xl hover:px-32 duration-500 "
+                  className="bg-custom-blue uppercase px-10 py-3 rounded-3xl hover:px-14 duration-200 "
                 >
                   Entrar
                 </button>
