@@ -22,7 +22,12 @@ make run_postgres
 make migrate
 ```
 
-3. Run app
+3. Seed DB
+```
+make seed
+```
+
+4. Run app
 ```
 npm run dev
 ```

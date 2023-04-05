@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { UserService } from '@/services/user.service';
-import { validateAddress } from '@/utils/validations';
+import { validateLocation } from '@/utils/validations';
 import { User } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import bcrypt from 'bcrypt';
@@ -26,7 +26,7 @@ export default async function handler(
     else if (req.method === "PUT") {
       const userData: Partial<User> = req.body;
 
-      if (userData.address && !validateAddress(userData.address)) {
+      if (userData.location && !validateLocation(userData.location)) {
         throw new Error('Invalid address')
       }
 

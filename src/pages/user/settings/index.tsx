@@ -8,7 +8,7 @@ const data = [
   {label: "Nome", value: "name"},
   {label: "Email", value: "email"},
   {label: "Telefone", value: "phone"},
-  {label: "Criado Em", value: "createAt"},
+  {label: "Criado Em", value: "createdAt"},
 ];
 
 const UserSettings = ({ user }: { user: User }) => {

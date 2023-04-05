@@ -19,7 +19,7 @@ export class UserModel {
                 name: true,
                 email: true,
                 phone: true,
-                address: true,
+                location: true,
             },
             take: limit, 
             skip: (page - 1) * limit,
@@ -40,7 +40,7 @@ export class UserModel {
             name: true,
             email: true,
             phone: true,
-            address: true
+            location: true
         }
 
         return prisma.user.findUnique({ where: { id }, select })

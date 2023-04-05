@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { UserService } from '@/services/user.service';
-import { validateAddress } from '@/utils/validations';
+import { validateLocation } from '@/utils/validations';
 import { User } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next'
 
@@ -15,8 +15,8 @@ export default async function handler(
   try {
     const userData: User = req.body;
 
-    if (userData.address === "" || (userData.address && !validateAddress(userData.address))) {
-      throw new Error('Invalid address')
+    if (userData.location === "" || (userData.location && !validateLocation(userData.location))) {
+      throw new Error('Invalid location')
     }
 
     await UserService.createUser(userData);

@@ -1,8 +1,8 @@
 import validator from 'validator'
 
-export const validateAddress = (address: string): boolean => {
-    const pattern = /^zip=\d{8}__address=[^_=]*__number=\d+__neighborhood=[^_=]*__city=[^_=]*__stateUF=[A-Z]{2}$/
-    return validator.matches(address, pattern)
+export const validateLocation = (location: string): boolean => {
+    const pattern = /^\d+__\d+__[^_=]*$/
+    return validator.matches(location, pattern)
 }
 
 export const validatePhone = (phone: string): boolean => {
@@ -12,7 +12,7 @@ export const validatePhone = (phone: string): boolean => {
 
 
 // zip=\d{8}            OK
-// address=[^_=]*        OK
+// location=[^_=]*        OK
 // number=\d+           OK
 // neighborhood=[^_=]*  OK
 // city=[^_=]*          OK

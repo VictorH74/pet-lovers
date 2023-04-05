@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { PetShopService } from '@/services/petshop.service';
-// import { validateAddress } from '@/utils/validations';
+// import { validateLocation } from '@/utils/validations';
 import { PetShop } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next'
 
