@@ -1,21 +1,36 @@
-import { formatAddress, getBaseUrl } from "@/utils/helpers";
-import { PetShop } from "@prisma/client";
-import { GetServerSideProps } from "next";
+import { formatAddressToObj, getBaseUrl } from "@/utils/helpers";
+import { Pet, PetShop, User } from "@prisma/client";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/router";
 import StarIcon from "@mui/icons-material/Star";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { GoogleMap, MarkerF, useLoadScript } from "@react-google-maps/api";
+import useUser from "@/lib/useUser";
+import PetCard from "@/components/PetCard";
+import EditIcon from "@mui/icons-material/Edit";
+import PetFilterBar from "@/components/PetFilterBar";
 
-interface Props {
-  petshopData: PetShop;
+interface FinalPetShop extends PetShop {
+  owner: Pick<User, "id" | "name">;
+  animals: Pet[];
 }
 
-export default function Petshop({ petshopData: p }: Props) {
+interface Props {
+  petshopData: FinalPetShop;
+}
+
+export default function Petshop({
+  petshopData: p,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
   const libraries = useMemo(() => ["places"], []);
+  const { user } = useUser();
 
-  const location = formatAddress(p.location);
-  console.log(location);
+  const [editPets, setEditPets] = useState(false);
+
+  const location = formatAddressToObj(p.location);
+
+  const isOwner = useMemo(() => user?.id === p.owner.id, [user, p]);
 
   const mapCenter = { lat: location.lat, lng: location.lng };
 
@@ -73,6 +88,40 @@ export default function Petshop({ petshopData: p }: Props) {
               4.7
             </p>
           </div>
+        </div>
+      </div>
+      <div className="text-center">
+        <div className="w-fit m-auto flex gap-2 items-center">
+          <h2 className="text-3xl text-custom-gray leading-12">Animais</h2>
+
+          {isOwner && (
+            <div className="relative">
+              <button
+                onClick={() => setEditPets((prev) => !prev)}
+                className="border-2 border-custom-blue rounded-full p-1"
+              >
+                <EditIcon className="text-custom-blue" />
+              </button>
+              <div
+                className={`bg-[#00000085] absolute left-full top-full z-20 p-3 backdrop-blur rounded-[0_15px_15px_15px] text-left font-semibold ${
+                  editPets ? "opacity-1" : "opacity-0 scale-90 pointer-events-none"
+                } duration-200`}
+              >
+                <button className="uppercase text-custom-blue">
+                  Adicionar
+                </button>
+                <button className="uppercase text-custom-red">Remover</button>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <PetFilterBar />
+
+        <div className="flex flex-wrap justify-center gap-4 mt-5">
+          {p.animals.map((pet: Pet) => (
+            <PetCard key={pet.id} {...pet} />
+          ))}
         </div>
       </div>
     </main>

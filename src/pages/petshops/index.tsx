@@ -17,6 +17,10 @@ export default function PetshopList() {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    console.log(petshops)
+  }, [petshops]);
+
   if (isLoading) <div>Loading...</div>;
 
   if (petshops.length === 0) {

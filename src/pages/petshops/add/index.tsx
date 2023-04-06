@@ -12,6 +12,9 @@ import { PetShop, User } from "@prisma/client";
 import { useRouter } from "next/router";
 import fetchJson from "@/lib/fetchJson";
 import useUser from "@/lib/useUser";
+import { TailSpin } from "react-loader-spinner";
+import { formatAddressToString } from "@/utils/helpers";
+import AddIcon from "@mui/icons-material/Add";
 
 const apiKey = API_KEY;
 const geocodeJson = "https://maps.googleapis.com/maps/api/geocode/json";
@@ -28,19 +31,22 @@ interface IFormValues {
 }
 
 const PetshopRegister = () => {
+  const router = useRouter();
   const { user } = useUser({ redirectTo: "/signup" });
-  const [response, setResponse] = useState<any[]>([]);
+  const [loadingLocation, setLoadingLocation] = useState(false);
+  const [specie, setSpecie] = useState("");
   const [addressValue, setAddress] = useState("");
   const [selectedAddress, setSelectedAddress] = useState<string | undefined>(
     undefined
   );
+  const [response, setResponse] = useState<any[]>([]);
+  const [petSpecies, setSpecieList] = useState<string[]>([]);
   const [location, setLocation] = useState<
     { lat: number; lng: number; address: string } | undefined
   >(undefined);
   const [errorMsg, setErrorMsg] = useState<ErrorMsg>({
     emptyLocation: false,
   });
-  const router = useRouter();
 
   useDebounce(
     () => {
@@ -51,14 +57,13 @@ const PetshopRegister = () => {
     [addressValue]
   );
 
-  const clear = () => {
-    setResponse([]);
-  };
+  const clear = () => setResponse([]);
 
   const geocode = async () => {
     clear();
 
     try {
+      setLoadingLocation(true);
       let res = await (
         await fetch(
           `${geocodeJson}?address=${addressValue}&language=pt-BR&key=${apiKey}`
@@ -67,9 +72,26 @@ const PetshopRegister = () => {
 
       let { results } = res;
       setResponse(results);
+      setLoadingLocation(false);
     } catch (e) {
       alert("Geocode was not successful for the following reason: " + e);
     }
+  };
+
+  const addSpecie = () => {
+    if (!specie) return;
+
+    let finalSpecie =
+      specie.slice(0, 1).toUpperCase() + specie.slice(1).toLowerCase();
+
+    if (petSpecies.includes(finalSpecie)) return;
+
+    setSpecieList((prev) => [...prev, finalSpecie]);
+    setSpecie("");
+  };
+
+  const removeSpecie = (specie: string) => {
+    setSpecieList((prev) => prev.filter((str) => str !== specie));
   };
 
   const handleSubmit = async (values: IFormValues) => {
@@ -82,7 +104,13 @@ const PetshopRegister = () => {
 
     let finalValues = {
       ...values,
-      location: JSON.stringify(location),
+      location: formatAddressToString(
+        location ||
+          (() => {
+            throw new Error("location object not defined");
+          })()
+      ),
+      petSpecies,
       userId: user?.id,
     };
     // console.log(finalValues)
@@ -105,7 +133,7 @@ const PetshopRegister = () => {
           <div className="bg-white h-[2px] w-16 m-auto" />
           <h2 className="text-2xl font-light">cadastro petshop</h2>
         </div>
-        <p className="font-light">Proprietário: {user?.name}</p>
+        <p className="font-light">Proprietário(a): {user?.name}</p>
         <Formik
           initialValues={{
             name: "",
@@ -127,6 +155,44 @@ const PetshopRegister = () => {
                   handleChange={handleChange}
                   handleBlur={handleBlur}
                 />
+                <div className="relative">
+                  <TextField
+                    autoComplete="none"
+                    sx={textFieldStyle}
+                    variant={"standard"}
+                    className="text-white"
+                    label={<p className="text-white">Espécies</p>}
+                    id="specie"
+                    name="specie"
+                    value={specie}
+                    onChange={(e) => {
+                      let { value } = e.target;
+                      setSpecie(value);
+                    }}
+                  />
+                  {specie && (
+                    <span className="absolute right-0 bottom-1">
+                      <button type="button" onClick={addSpecie}>
+                        <AddIcon />
+                      </button>
+                    </span>
+                  )}
+                </div>
+                {petSpecies.length > 0 && (
+                  <div className="flex gap-2 overflow-x-scroll blue-scrollbar">
+                    {petSpecies.map((specie) => (
+                      <span key={specie}>
+                        <p
+                          onClick={() => removeSpecie(specie)}
+                          className="bg-custom-blue px-2 mb-1 rounded cursor-pointer"
+                        >
+                          {specie}
+                        </p>
+                      </span>
+                    ))}
+                  </div>
+                )}
+
                 <TextField
                   autoComplete="none"
                   placeholder={addressValue || "Digite seu endereço"}
@@ -161,25 +227,40 @@ const PetshopRegister = () => {
                   )
                 )}
               </div>
-              <div className="">
-                <pre className="shadow-md rounded-lg mt-2 overflow-hidden text-left">
-                  {response.map((address, index) => (
-                    <p
-                      className="hover:bg-custom-blue text-white text-[12px] p-2 flex items-center cursor-pointer duration-150 truncate"
-                      onClick={() => {
-                        setSelectedAddress(address.formatted_address);
-                        setLocation({
-                          ...address?.geometry?.location,
-                          address: address.formatted_address,
-                        });
-                        clear();
-                      }}
-                      key={index}
-                    >
-                      <LocationOnIcon />
-                      &nbsp;{address.formatted_address}
-                    </p>
-                  ))}
+              <div className="relative">
+                <pre className="absolute left-0 right-0 shadow-md rounded-lg mt-2 overflow-hidden text-left bg-white">
+                  {loadingLocation ? (
+                    <div className="p-2 m-auto w-fit">
+                      <TailSpin
+                        height="45"
+                        width="45"
+                        color="#ffff"
+                        ariaLabel="tail-spin-loading"
+                        radius="1"
+                        wrapperStyle={{}}
+                        wrapperClass=""
+                        visible={true}
+                      />
+                    </div>
+                  ) : (
+                    response.map((address, index) => (
+                      <p
+                        className="hover:bg-custom-blue hover:text-white text-custom-gray text-[12px] p-2 flex items-center cursor-pointer duration-150 truncate"
+                        onClick={() => {
+                          setSelectedAddress(address.formatted_address);
+                          setLocation({
+                            ...address?.geometry?.location,
+                            address: address.formatted_address,
+                          });
+                          clear();
+                        }}
+                        key={index}
+                      >
+                        <LocationOnIcon />
+                        &nbsp;{address.formatted_address}
+                      </p>
+                    ))
+                  )}
                 </pre>
               </div>
               <button

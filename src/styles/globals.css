@@ -43,3 +43,22 @@
 .header-link:hover {
   scale: 110%;
 }
+
+::-webkit-scrollbar {
+  background-color: transparent;
+  width: 10px;
+}
+::-webkit-scrollbar-thumb{
+  background-color: #00C898;
+  border-radius: 5px;
+}
+
+.blue-scrollbar::-webkit-scrollbar {
+  background-color: transparent;
+  height: 10px;
+}
+
+.blue-scrollbar::-webkit-scrollbar-thumb{
+  background-color: #368FC1;
+  border-radius: 5px;
+}
