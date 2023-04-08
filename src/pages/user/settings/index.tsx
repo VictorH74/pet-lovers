@@ -16,7 +16,7 @@ const UserSettings = ({ user }: { user: User }) => {
   const deleteAccount = () => alert("Em desenvolvimento");
 
   return (
-    <main>
+    <div>
       <div className=" bg-custom-blue w-[1146px] p-10 m-auto mt-12 rounded-xl">
         <div className="flex gap-4 items-center h-[200px]">
           <AccountCircleIcon sx={{ color: "white", fontSize: 90 }} />
@@ -44,7 +44,7 @@ const UserSettings = ({ user }: { user: User }) => {
           Excluir conta
         </button>
       </div>
-    </main>
+    </div>
   );
 };
 

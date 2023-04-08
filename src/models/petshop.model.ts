@@ -48,15 +48,6 @@ export class PetShopModel {
       location: true,
       createdAt: true,
       petSpecies: true,
-      animals: {
-        select: {
-          id: true,
-          species: true,
-          age: true,
-          breed: true,
-          price: true,
-        },
-      },
     };
 
     return prisma.petShop.findUnique({ where: { id }, select });

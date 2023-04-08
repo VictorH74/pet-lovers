@@ -1,6 +1,6 @@
 import * as Yup from "yup";
 
-export const Schema = Yup.object().shape({
+export const loginSchema = Yup.object().shape({
   email: Yup.string()
     .min(5, "Muito curto")
     .max(50, "Muito grande")

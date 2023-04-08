@@ -21,6 +21,7 @@ const PetCard: React.FC<Pet> = (pet) => {
           className="rounded-md"
           width={300}
           height={180}
+          loading="lazy"
           src={`https://picsum.photos/300/180?random=${pet.id}`}
           alt="pet image"
         />
@@ -35,7 +36,7 @@ const PetCard: React.FC<Pet> = (pet) => {
         <p className="font-semibold mb-[-7px]">Raça:</p>
         <p>{pet.breed}</p>
         <p className="font-semibold mb-[-7px]">Detalhes Adicionais:</p>
-        <p>-</p>
+        <p>{pet.aditionalDetails || "-"}</p>
         <p className="font-semibold text-xl mt-4">R$ {pet.price}</p>
         <button className="w-full" onClick={() => setShow((prev) => !prev)}>
           <ExpandMoreIcon

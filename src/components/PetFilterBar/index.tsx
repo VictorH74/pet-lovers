@@ -3,7 +3,7 @@ const optionClassName = "text-custom-gray border-[1px] border-custom-emerald rou
 
 const PetFilterBar = () => {
     return (
-        <div className=" flex w-fit gap-3 m-auto my-4">
+        <div className=" flex flex-wrap w-fit gap-3 m-auto my-4 justify-center">
             <p className={optionClassName}>TODOS</p>
             <p className={optionClassName}>PREÇO</p>
             <p className={optionClassName}>PESQUISAR</p>

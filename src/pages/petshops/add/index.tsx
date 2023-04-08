@@ -184,7 +184,7 @@ const PetshopRegister = () => {
                       <span key={specie}>
                         <p
                           onClick={() => removeSpecie(specie)}
-                          className="bg-custom-blue px-2 mb-1 rounded cursor-pointer"
+                          className="bg-custom-blue px-2 mb-1 rounded cursor-pointer hover:bg-custom-red"
                         >
                           {specie}
                         </p>

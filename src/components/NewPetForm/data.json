@@ -1,0 +1,22 @@
+[
+    {
+        "label": "Espécie",
+        "name": "specie"
+    },
+    {
+        "label": "Raça",
+        "name": "breed"
+    },
+    {
+        "label": "Idade",
+        "name": "age"
+    },
+    {
+        "label": "Preço",
+        "name": "price"
+    },
+    {
+        "label": "Detalhes adicionais",
+        "name": "aditionalDetails"
+    }
+]
