@@ -8,7 +8,7 @@ import FormBase from "@/components/FormBase";
 import GoogleBtn from "@/components/GoogleBtn";
 import Line from "@/components/Line";
 import WithFormik from "@/components/WithFormik";
-
+import Link from "next/link";
 
 interface IFormValues {
   email: string;
@@ -45,23 +45,30 @@ const Login = () => {
   if (user) router.replace("/");
 
   return (
-    <FormBase>
-      <FormLogo text="Faça seu login" />
-      <WithFormik
-        initialValues={{
-          email: "",
-          password: "",
-        }}
-        validationSchema={loginSchema}
-        onSubmit={handleSubmit}
-        fieldArray={data}
-        submitBtnLabel="Entrar"
-        fieldVariant="outlined"
-      />
-      <Line>OU</Line>
-      <GoogleBtn onClick={() => alert("Em desenvolvimento")} />
-    </FormBase>
+    <div className="@container">
+      <div className="h-screen place-items-center @[500px]:grid block">
+        <FormBase className="@[500px]:rounded-lg">
+          <FormLogo text="Faça seu login" />
+          <WithFormik
+            initialValues={{
+              email: "",
+              password: "",
+            }}
+            validationSchema={loginSchema}
+            onSubmit={handleSubmit}
+            fieldArray={data}
+            submitBtnLabel="Entrar"
+            fieldVariant="outlined"
+            belowTheFields={
+              <Link href="/signup">Fazer cadastro</Link>
+            }
+          />
+
+          <Line>OU</Line>
+          <GoogleBtn onClick={() => alert("Em desenvolvimento")} />
+        </FormBase>
+      </div>
+    </div>
   );
 };
-
 export default Login;

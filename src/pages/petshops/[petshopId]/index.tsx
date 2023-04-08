@@ -26,6 +26,8 @@ export default function Petshop({ petshopData: p }: Props) {
   const { user } = useUser();
   const [showNewPetForm, setShowNewPetForm] = useState(false);
 
+  const [deleteablePet, setDeleteablePet] = useState(false);
+
   const [animals, setAnimals] = useState<Pet[]>([]);
 
   const [editPets, setEditPets] = useState(false);
@@ -89,6 +91,13 @@ export default function Petshop({ petshopData: p }: Props) {
     });
     setAnimals((prev) => [finalPet, ...prev]);
     closeNewPetForm();
+  };
+
+  const deletePet = async (petId: number) => {
+    await fetchJson(`${window.location.origin}/api/pets/${petId}`, {
+      method: "DELETE",
+    });
+    setAnimals((prev) => prev.filter((pets) => pets.id !== petId));
   };
 
   const closeNewPetForm = () => setShowNewPetForm(false);
@@ -161,7 +170,13 @@ export default function Petshop({ petshopData: p }: Props) {
                   >
                     Adicionar
                   </button>
-                  <button className="uppercase text-custom-red">Remover</button>
+                  <button
+                    className="uppercase text-custom-red"
+                    onClick={() => setDeleteablePet(true)}
+                    disabled={deleteablePet}
+                  >
+                    Remover
+                  </button>
                 </div>
               </div>
             )}
@@ -171,13 +186,26 @@ export default function Petshop({ petshopData: p }: Props) {
 
           <div className="flex flex-wrap justify-center gap-4 mt-5">
             {animals.map((pet) => (
-              <PetCard key={pet.id} {...pet} />
+              <PetCard
+                key={pet.id}
+                pet={pet}
+                deleteable={deleteablePet}
+                handleDelete={deletePet}
+              />
             ))}
           </div>
         </div>
       </div>
       {showNewPetForm && (
         <NewPetForm handleSubmit={addNewPet} close={closeNewPetForm} />
+      )}
+      {deleteablePet && (
+        <button
+          className="fixed right-9 bottom-9 bg-custom-blue text-white px-7 py-1 text-lg uppercase font-semibold rounded-md"
+          onClick={() => setDeleteablePet(false)}
+        >
+          finalizar
+        </button>
       )}
     </>
   );

@@ -12,8 +12,8 @@ interface Props {
 
 const NewPetForm: React.FC<Props> = ({ handleSubmit, close }) => {
   return (
-    <div className={`fixed left-0 right-0 bottom-0 top-0 bg-[#00000050] duration-200 z-[9999]`}>
-      <FormBase>
+    <div className={`fixed left-0 right-0 bottom-0 top-0 bg-[#00000050] duration-200 z-[9999] h-full grid place-items-center overflow-y-auto @container`}>
+      <FormBase className="@[500px]:rounded-lg">
         <FormLogo text="Novo pet" />
         <WithFormik
           initialValues={{

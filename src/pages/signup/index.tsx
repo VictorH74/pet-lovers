@@ -7,7 +7,7 @@ import FormLogo from "@/components/FormLogo";
 import GoogleBtn from "@/components/GoogleBtn";
 import Line from "@/components/Line";
 import WithFormik from "@/components/WithFormik";
-
+import Link from "next/link";
 
 interface IFormValues {
   name: string;
@@ -17,37 +17,48 @@ interface IFormValues {
 
 const UserRegister = () => {
   const router = useRouter();
+
   const handleSubmit = async (values: IFormValues) => {
-    // console.log(values);
+    console.log(values);
     let res = await fetchJson("api/users/add", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(values),
+      body: JSON.stringify({
+        name: values.name,
+        email: values.email,
+        password: values.password,
+      }),
     });
     console.log(res);
     alert("Conta criada com sucesso!");
     router.replace("/login");
   };
 
-
   return (
-    <FormBase>
-      <FormLogo text="cadastrar usuário" />
-      <GoogleBtn onClick={() => alert("Em desenvolvimento")} />
-      <Line>OU</Line>
-      <WithFormik
-        initialValues={{
-          name: "",
-          email: "",
-          password: "",
-        }}
-        validationSchema={signupSchema}
-        onSubmit={handleSubmit}
-        fieldArray={data}
-        fieldVariant="outlined"
-        submitBtnLabel="Cadastrar"
-      />
-    </FormBase>
+    <div className="@container">
+      <div className="h-screen place-items-center @[500px]:grid block">
+        <FormBase className="@[500px]:rounded-lg">
+          <FormLogo text="cadastrar usuário" />
+          <GoogleBtn onClick={() => alert("Em desenvolvimento")} />
+          <Line>OU</Line>
+          <WithFormik
+            initialValues={{
+              name: "",
+              email: "",
+              password: "",
+            }}
+            validationSchema={signupSchema}
+            onSubmit={handleSubmit}
+            fieldArray={data}
+            fieldVariant="outlined"
+            submitBtnLabel="Cadastrar"
+            belowTheFields={
+              <Link href="/login">Já possiui uma conta? Fazer login</Link>
+            }
+          />
+        </FormBase>
+      </div>
+    </div>
   );
 };
 

@@ -2,16 +2,19 @@ import React from "react";
 
 interface Props {
   children: JSX.Element | JSX.Element[];
+  className?: string;
 }
 
-const FormBase: React.FC<Props> = ({ children }) => {
+const FormBase: React.FC<Props> = ({ children, className = "" }) => {
   return (
-    <div className="@container">
-      <div className="bg-custom-emerald max-w-[482px] @[500px]:rounded-lg text-center text-white m-auto @[500px]:my-[4%]">
+    <div
+      className={
+        "bg-custom-emerald w-full max-w-[482px] text-center text-white" + " " +
+        className
+      }
+    >
       <div className="p-[12%]">{children}</div>
     </div>
-    </div>
-    
   );
 };
 
