@@ -53,8 +53,9 @@ const UserRegister = () => {
             fieldVariant="outlined"
             submitBtnLabel="Cadastrar"
             belowTheFields={
-              <Link href="/login">Já possiui uma conta? Fazer login</Link>
+              <Link href="/login">Já possui uma conta? Fazer login</Link>
             }
+            fieldsContainerClassName="w-full mb-6"
           />
         </FormBase>
       </div>

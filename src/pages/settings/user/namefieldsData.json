@@ -1,0 +1,10 @@
+[
+        {
+            "label": "Nome",
+            "name": "name"
+        },
+        {
+            "label": "Sobrenome",
+            "name": "surname"
+        }
+]

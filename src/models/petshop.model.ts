@@ -52,6 +52,26 @@ export class PetShopModel {
 
     return prisma.petShop.findUnique({ where: { id }, select });
   }
+  public static retrievePetshopByUserId(userId: string) {
+    const select = {
+      id: true,
+      name: true,
+      description: true,
+      owner: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+      website: true,
+      phone: true,
+      location: true,
+      createdAt: true,
+      petSpecies: true,
+    };
+
+    return prisma.petShop.findUnique({ where: { userId }, select });
+  }
 
   public static updatePetshop(id: string, data: Partial<PetShop>) {
     return prisma.petShop.update({ where: { id }, data });

@@ -28,8 +28,9 @@ const NewPetForm: React.FC<Props> = ({ handleSubmit, close }) => {
           submitBtnLabel="Salvar"
           validationSchema={petSchema}
           fieldVariant="outlined"
+          fieldsContainerClassName="w-full mb-6"
         />
-        <button className="m-4 uppercase" type="button" onClick={close}>Cancelar</button>
+        <button className="m-4 uppercase text-custom-red" type="button" onClick={close}>Cancelar</button>
       </FormBase>
     </div>
   );

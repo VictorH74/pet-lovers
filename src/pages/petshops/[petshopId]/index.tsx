@@ -8,9 +8,9 @@ import { GoogleMap, MarkerF, useLoadScript } from "@react-google-maps/api";
 import useUser from "@/lib/useUser";
 import PetCard from "@/components/PetCard";
 import EditIcon from "@mui/icons-material/Edit";
-import PetFilterBar from "@/components/PetFilterBar";
 import NewPetForm from "@/components/NewPetForm";
 import fetchJson from "@/lib/fetchJson";
+import PetFilterBar from "@/components/PetFilterBar";
 
 interface FinalPetShop extends PetShop {
   owner: Pick<User, "id" | "name">;

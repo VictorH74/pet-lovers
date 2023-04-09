@@ -1,0 +1,23 @@
+[
+        {
+            "label": "Nome",
+            "name": "name"
+        },
+        {
+            "label": "Descrição",
+            "name": "description"
+        },
+        {
+            "label": "Website",
+            "name": "website"
+        },
+        {
+            "label": "Telefone",
+            "name": "phone",
+            "type": "phone"
+        },
+        {
+            "label": "Endereço",
+            "name": "location"
+        }
+]

@@ -7,7 +7,9 @@ export function formatDate(date: Date): string {
   return `${day}/${month}/${year}`;
 }
 
-export const formatAddressToObj = (location: string) => {
+export const formatAddressToObj = (location: string | null) => {
+  if (!location) return {lat: "", lng: "", anddress: ""}
+
   let locationArray = location.split("__");
   return {
     lat: Number(locationArray[0]),

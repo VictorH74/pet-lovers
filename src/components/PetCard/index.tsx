@@ -1,9 +1,7 @@
 import { Pet } from "@prisma/client";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
-import fetchJson from "@/lib/fetchJson";
 
 interface Props {
   pet: Pet;

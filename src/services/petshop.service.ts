@@ -14,6 +14,10 @@ export class PetShopService {
         return PetShopModel.retrievePetshop(id);
     }
 
+    public static retrievePetshopByUserId(userId: string) {
+        return PetShopModel.retrievePetshopByUserId(userId);
+    }
+
     public static updatePetshop(id: string, data: Partial<PetShop>) {
         return PetShopModel.updatePetshop(id, data);
     }

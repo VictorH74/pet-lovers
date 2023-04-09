@@ -5,9 +5,10 @@ const PetFilterBar = () => {
     return (
         <div className=" flex flex-wrap w-fit gap-3 m-auto my-4 justify-center">
             <p className={optionClassName}>TODOS</p>
-            <p className={optionClassName}>PREÇO</p>
-            <p className={optionClassName}>PESQUISAR</p>
-            <p className={optionClassName}>ESPÉCIE</p>
+            <p className={optionClassName}>MENOR PREÇO</p>
+            <p className={optionClassName}>IDADE</p>
+            <p className={optionClassName}>TIPO DE ANIMAL</p>
+            <p className={optionClassName}>RAÇA</p>
         </div>
     )
 }

@@ -1,4 +1,4 @@
-import Fields, { textFieldStyle } from "@/components/InputField";
+import Fields, { textFieldStyle } from "@/components/Fields";
 import Logo from "@/components/Logo";
 import { Form, Formik } from "formik";
 import data from "./data.json";
@@ -8,7 +8,7 @@ import { useState } from "react";
 import { API_KEY } from "@/utils/constants";
 import { useDebounce } from "react-use";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import { PetShop, User } from "@prisma/client";
+import { PetShop } from "@prisma/client";
 import { useRouter } from "next/router";
 import fetchJson from "@/lib/fetchJson";
 import useUser from "@/lib/useUser";

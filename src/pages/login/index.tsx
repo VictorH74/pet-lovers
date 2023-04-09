@@ -62,6 +62,7 @@ const Login = () => {
             belowTheFields={
               <Link href="/signup">Fazer cadastro</Link>
             }
+            fieldsContainerClassName="w-full mb-6"
           />
 
           <Line>OU</Line>

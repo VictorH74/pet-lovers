@@ -1,0 +1,14 @@
+[
+    {
+        "label": "Dados da Conta",
+        "route": "user"
+    },
+    {
+        "label": "Minha Petshop",
+        "route": "my-petshop"
+    },
+    {
+        "label": "Senha",
+        "route": "user-password"
+    }
+]

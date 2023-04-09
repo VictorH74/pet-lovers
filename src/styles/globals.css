@@ -62,3 +62,8 @@
   background-color: #368FC1;
   border-radius: 5px;
 }
+
+.white-scrollbar::-webkit-scrollbar-thumb{
+  background-color: #ffffff88;
+  border-radius: 5px;
+}

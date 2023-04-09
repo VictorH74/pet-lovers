@@ -103,7 +103,7 @@ const Header = () => {
                           aria-labelledby="composition-button"
                         >
                           <MenuItem onClick={handleClose}>
-                            <Link href="/user/settings">Minha conta</Link>
+                            <Link href="/settings/user">Minha conta</Link>
                           </MenuItem>
                           <MenuItem onClick={logout}>Sair</MenuItem>
                         </MenuList>
