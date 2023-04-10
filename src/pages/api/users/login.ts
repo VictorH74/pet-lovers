@@ -10,35 +10,32 @@ export default withIronSessionApiRoute(loginRoute, sessionOptions);
 
 async function loginRoute(
   req: NextApiRequest,
-  res: NextApiResponse<User | { error: string }>
+  res: NextApiResponse<User | { message: string; status: number }>
 ) {
   try {
     const userData: Pick<User, "email" | "password"> = await req.body;
     const user = await UserService.getUserByEmail(userData.email);
 
-    if (!user) throw new Error("Invalid email");
+    if (!user)
+      return res.status(404).send({ message: "Email não encontrado", status: 404 });
 
     const isPasswordCorrect = await bcrypt.compare(
       userData.password,
       user.password
     );
 
-    if (!isPasswordCorrect) throw new Error("Invalid password");
+    if (!isPasswordCorrect)
+      res.status(400).send({ message: "Senha inválida", status: 400 });
 
-    // NEW
     req.session.user = user;
     await req.session.save();
     return res.send(user);
-
-    // const token = jwt.sign({ userId: user.id }, SECRET, { expiresIn: "1h" });
-
-    // return res.send({ token });
   } catch (error) {
     if (error instanceof Error) {
-      res.status(500).send({ error: error.message });
+      res.status(500).send({ message: error.message, status: 500 });
       return;
     }
     console.error(error);
-    res.status(500).send({ error: "Internal server error" });
+    res.status(500).send({ message: "Internal server error", status: 500 });
   }
 }

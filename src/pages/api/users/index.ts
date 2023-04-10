@@ -6,7 +6,7 @@ import { UserException } from '@/exceptions/user';
 
 export default async function handler(
     req: NextApiRequest,
-    res: NextApiResponse<Partial<User>[] | { error: string }>
+    res: NextApiResponse<Partial<User>[] | { message: string; status?: number }>
 ) {
     try {
         if (req.method !== "GET") throw new UserException(`Forbidden request method: ${req.method}`)
@@ -19,15 +19,15 @@ export default async function handler(
     } catch (error) {
 
         if (error instanceof UserException) {
-            res.status(405).send({ error: error.message })
+            res.status(405).send({ message: error.message, status: 405 })
             return
         }
 
         if (error instanceof Error) {
-            res.status(500).send({ error: error.message })
+            res.status(500).send({ message: error.message, status: 500 })
             return
         }
         console.error(error);
-        res.status(500).send({ error: 'Internal server error' });
+        res.status(500).send({ message: 'Internal server error', status: 500 });
     }
 }

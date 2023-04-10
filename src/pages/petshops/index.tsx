@@ -17,13 +17,13 @@ export default function PetshopList() {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    console.log(petshops)
-  }, [petshops]);
+  if (isLoading) {
+    return (
+      <div>Loading...</div>
+    )
+  }
 
-  if (isLoading) <div>Loading...</div>;
-
-  if (petshops.length === 0) {
+  if (petshops.length === 0 && !isLoading) {
     return (
       <div className="grid place-items-center">
         <h2 className="text-2xl text-stone-600 my-6">

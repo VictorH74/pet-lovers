@@ -1,7 +1,7 @@
 import validator from 'validator'
 
 export const validateLocation = (location: string): boolean => {
-    const pattern = /^\d+__\d+__[^_=]*$/
+    const pattern = /^[\d.-]*__[\d.-]*__[^__]*$/
     return validator.matches(location, pattern)
 }
 
@@ -19,3 +19,5 @@ export const validatePhone = (phone: string): boolean => {
 // stateUF=[A-Z]{2}     OK
 
 // zip=45994160__address=Monte Carmelo__number=1123__neighborhood=Ed'u-ár.d°:o Magalhaes__city=Teixeira de Freitas__stateUF=BA"
+
+// -5.1877089__-42.7779957__R. Mirra - Angelim, Teresina - PI, Brasil

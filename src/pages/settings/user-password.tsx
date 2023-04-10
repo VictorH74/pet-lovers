@@ -1,3 +1,4 @@
+import Button from "@/components/Button";
 import SettingsNavBar from "@/components/SettingsNavBar";
 import SimpleInputField from "@/components/SimpleInputField";
 import { ChangeEvent, useState } from "react";
@@ -32,9 +33,9 @@ const UserPasswordSettings = () => {
           />
         </div>
 
-        <button className="text-white bg-custom-blue py-2 px-7 w-64 rounded-md m-auto uppercase">
+        <Button className="w-64 m-auto">
           Salvar
-        </button>
+        </Button>
       </form>
     </SettingsNavBar>
   );

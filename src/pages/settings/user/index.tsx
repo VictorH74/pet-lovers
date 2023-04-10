@@ -9,6 +9,9 @@ import accountFieldsData from "./accountFieldsData.json";
 import React, { FormEvent, useState } from "react";
 import SimpleInputField from "@/components/SimpleInputField";
 import { formatAddressToObj } from "@/utils/helpers";
+import Button from "@/components/Button";
+import fetchJson, { FetchError } from "@/lib/fetchJson";
+import useUser from "@/lib/useUser";
 
 type NameData = { name: string; surname: string };
 type AccountData = {
@@ -18,6 +21,7 @@ type AccountData = {
 };
 
 const UserSettings = ({ user }: { user: User }) => {
+  const { mutateUser } = useUser();
   const [nameData, setName] = useState<NameData>({
     name: user.name.split(" ")[0],
     surname: user.name.split(" ")[user.name.split(" ").length - 1] || "",
@@ -32,7 +36,31 @@ const UserSettings = ({ user }: { user: User }) => {
 
   const saveName = async (e: FormEvent) => {
     e.preventDefault();
-    console.log(nameData);
+
+    let name = "";
+    for (let key in nameData) {
+      name += nameData[key as keyof typeof nameData] + " ";
+    }
+
+    name = name.trim();
+
+    try {
+      mutateUser(
+        await fetchJson(`${window.location.origin}/api/users/${user.id}`, {
+          method: "PUT",
+          headers: { "Content-type": "application/json" },
+          body: JSON.stringify({ name }),
+        })
+      );
+      alert("Nome atualizado! 🙂👍");
+    } catch (error) {
+      if (error instanceof FetchError) {
+        console.error(error.data);
+        // setError(error.data);
+      } else {
+        console.error("An unexpected error happened:", error);
+      }
+    }
   };
 
   const savesetAccountData = async (e: FormEvent) => {
@@ -64,9 +92,7 @@ const UserSettings = ({ user }: { user: User }) => {
               ))}
             </div>
           </div>
-          <button className="text-white bg-custom-blue py-2 px-7 rounded-md mt-4 w-64 uppercase">
-            Salvar
-          </button>
+          <Button className="mt-4 w-64">Salvar</Button>
         </form>
 
         <div className="bg-white h-1 w-full rounded-xl" />
@@ -89,9 +115,7 @@ const UserSettings = ({ user }: { user: User }) => {
               }}
             />
           ))}
-          <button className="text-white bg-custom-blue py-2 px-7 w-64 rounded-md m-auto uppercase">
-            Salvar
-          </button>
+          <Button className="w-64 m-auto">Salvar</Button>
         </form>
       </>
     </SettingsNavBar>

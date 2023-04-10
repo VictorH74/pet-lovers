@@ -1,26 +1,31 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type { NextApiRequest, NextApiResponse } from 'next'
-import { PetShop } from '@prisma/client';
-import { PetShopService } from '@/services/petshop.service';
+import type { NextApiRequest, NextApiResponse } from "next";
+import { PetShop } from "@prisma/client";
+import { PetShopService } from "@/services/petshop.service";
 
 export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse<Partial<PetShop>[] | { error: string }>
+  req: NextApiRequest,
+  res: NextApiResponse<
+    Partial<PetShop>[] | { message: string; statuc?: number }
+  >
 ) {
-    try {
-        if (req.method !== "GET") throw new Error(`Forbidden request method: ${req.method}`)
+  try {
+    if (req.method !== "GET")
+      throw new Error(`Forbidden request method: ${req.method}`);
 
-        const { page = 1, limit = 10 } = req.query;
+    const { page = 1, limit = 10 } = req.query;
 
-        const petshops = await PetShopService.listPetshops(Number(page), Number(limit));
-        res.status(200).json(petshops);
-        
-    } catch (error) {
-        if (error instanceof Error) {
-            res.status(500).send({ error: error.message })
-            return
-        }
-        console.error(error);
-        res.status(500).send({ error: 'Internal server error' });
+    const petshops = await PetShopService.listPetshops(
+      Number(page),
+      Number(limit)
+    );
+    res.status(200).json(petshops);
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(500).send({ message: error.message, statuc: 500 });
+      return;
     }
+    console.error(error);
+    res.status(500).send({ message: "Internal server error", statuc: 500 });
+  }
 }

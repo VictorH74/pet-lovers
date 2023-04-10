@@ -12,9 +12,10 @@ import { PetShop } from "@prisma/client";
 import { useRouter } from "next/router";
 import fetchJson from "@/lib/fetchJson";
 import useUser from "@/lib/useUser";
-import { TailSpin } from "react-loader-spinner";
 import { formatAddressToString } from "@/utils/helpers";
 import AddIcon from "@mui/icons-material/Add";
+import Button from "@/components/Button";
+import Options from "@/components/Options";
 
 const apiKey = API_KEY;
 const geocodeJson = "https://maps.googleapis.com/maps/api/geocode/json";
@@ -34,8 +35,8 @@ const PetshopRegister = () => {
   const router = useRouter();
   const { user } = useUser({ redirectTo: "/signup" });
   const [loadingLocation, setLoadingLocation] = useState(false);
-  const [specie, setSpecie] = useState("");
-  const [addressValue, setAddress] = useState("");
+  const [specieInputValue, setSpecieInputValue] = useState("");
+  const [locationInputValue, setLocationInputValue] = useState("");
   const [selectedAddress, setSelectedAddress] = useState<string | undefined>(
     undefined
   );
@@ -50,11 +51,11 @@ const PetshopRegister = () => {
 
   useDebounce(
     () => {
-      if (!addressValue) return;
+      if (!locationInputValue) return;
       geocode();
     },
     1000,
-    [addressValue]
+    [locationInputValue]
   );
 
   const clear = () => setResponse([]);
@@ -66,7 +67,7 @@ const PetshopRegister = () => {
       setLoadingLocation(true);
       let res = await (
         await fetch(
-          `${geocodeJson}?address=${addressValue}&language=pt-BR&key=${apiKey}`
+          `${geocodeJson}?address=${locationInputValue}&language=pt-BR&key=${apiKey}`
         )
       ).json();
 
@@ -79,19 +80,20 @@ const PetshopRegister = () => {
   };
 
   const addSpecie = () => {
-    if (!specie) return;
+    if (!specieInputValue) return;
 
     let finalSpecie =
-      specie.slice(0, 1).toUpperCase() + specie.slice(1).toLowerCase();
+      specieInputValue.slice(0, 1).toUpperCase() +
+      specieInputValue.slice(1).toLowerCase();
 
     if (petSpecies.includes(finalSpecie)) return;
 
     setSpecieList((prev) => [...prev, finalSpecie]);
-    setSpecie("");
+    setSpecieInputValue("");
   };
 
-  const removeSpecie = (specie: string) => {
-    setSpecieList((prev) => prev.filter((str) => str !== specie));
+  const removeSpecie = (specieInputValue: string) => {
+    setSpecieList((prev) => prev.filter((str) => str !== specieInputValue));
   };
 
   const handleSubmit = async (values: IFormValues) => {
@@ -162,15 +164,15 @@ const PetshopRegister = () => {
                     variant={"standard"}
                     className="text-white"
                     label={<p className="text-white">Espécies</p>}
-                    id="specie"
-                    name="specie"
-                    value={specie}
+                    id="specieInputValue"
+                    name="specieInputValue"
+                    value={specieInputValue}
                     onChange={(e) => {
                       let { value } = e.target;
-                      setSpecie(value);
+                      setSpecieInputValue(value);
                     }}
                   />
-                  {specie && (
+                  {specieInputValue && (
                     <span className="absolute right-0 bottom-1">
                       <button type="button" onClick={addSpecie}>
                         <AddIcon />
@@ -179,7 +181,7 @@ const PetshopRegister = () => {
                   )}
                 </div>
                 {petSpecies.length > 0 && (
-                  <div className="flex gap-2 overflow-x-scroll blue-scrollbar">
+                  <div className="flex gap-2 overflow-x-scroll white-scrollbar">
                     {petSpecies.map((specie) => (
                       <span key={specie}>
                         <p
@@ -195,17 +197,17 @@ const PetshopRegister = () => {
 
                 <TextField
                   autoComplete="none"
-                  placeholder={addressValue || "Digite seu endereço"}
+                  placeholder={locationInputValue || "Digite seu endereço"}
                   sx={textFieldStyle}
                   variant={"standard"}
                   className="text-white"
                   label={<p className="text-white">Endereço</p>}
                   id="address"
                   name="address"
-                  value={addressValue}
+                  value={locationInputValue}
                   onChange={(e) => {
                     let { value } = e.target;
-                    setAddress(value);
+                    setLocationInputValue(value);
                   }}
                   onBlur={() =>
                     setErrorMsg((prev) => ({
@@ -227,48 +229,23 @@ const PetshopRegister = () => {
                   )
                 )}
               </div>
-              <div className="relative">
-                <pre className="absolute left-0 right-0 shadow-md rounded-lg mt-2 overflow-hidden text-left bg-white">
-                  {loadingLocation ? (
-                    <div className="p-2 m-auto w-fit">
-                      <TailSpin
-                        height="45"
-                        width="45"
-                        color="#ffff"
-                        ariaLabel="tail-spin-loading"
-                        radius="1"
-                        wrapperStyle={{}}
-                        wrapperClass=""
-                        visible={true}
-                      />
-                    </div>
-                  ) : (
-                    response.map((address, index) => (
-                      <p
-                        className="hover:bg-custom-blue hover:text-white text-custom-gray text-[12px] p-2 flex items-center cursor-pointer duration-150 truncate"
-                        onClick={() => {
-                          setSelectedAddress(address.formatted_address);
-                          setLocation({
-                            ...address?.geometry?.location,
-                            address: address.formatted_address,
-                          });
-                          clear();
-                        }}
-                        key={index}
-                      >
-                        <LocationOnIcon />
-                        &nbsp;{address.formatted_address}
-                      </p>
-                    ))
-                  )}
-                </pre>
-              </div>
-              <button
-                type="submit"
-                className="bg-custom-blue uppercase mt-10 px-10 py-3 rounded-3xl"
-              >
+              <Options
+                array={response}
+                isLoading={loadingLocation}
+                item={(item) => item.formatted_address}
+                itemBefore={<LocationOnIcon />}
+                itemHandleClick={(item) => {
+                  setSelectedAddress(item.formatted_address);
+                  setLocation({
+                    ...item?.geometry?.location,
+                    address: item.formatted_address,
+                  });
+                  clear();
+                }}
+              />
+              <Button type="submit" className=" mt-10 rounded-3xl">
                 Cadastrar
-              </button>
+              </Button>
             </Form>
           )}
         </Formik>

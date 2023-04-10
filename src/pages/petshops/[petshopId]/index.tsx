@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { formatAddressToObj, getBaseUrl } from "@/utils/helpers";
 import { Pet, PetShop, User } from "@prisma/client";
 import { GetServerSideProps } from "next";
@@ -9,7 +10,7 @@ import useUser from "@/lib/useUser";
 import PetCard from "@/components/PetCard";
 import EditIcon from "@mui/icons-material/Edit";
 import NewPetForm from "@/components/NewPetForm";
-import fetchJson from "@/lib/fetchJson";
+import fetchJson, { FetchError } from "@/lib/fetchJson";
 import PetFilterBar from "@/components/PetFilterBar";
 
 interface FinalPetShop extends PetShop {
@@ -25,18 +26,18 @@ export default function Petshop({ petshopData: p }: Props) {
   const libraries = useMemo(() => ["places"], []);
   const { user } = useUser();
   const [showNewPetForm, setShowNewPetForm] = useState(false);
-
   const [deleteablePet, setDeleteablePet] = useState(false);
-
   const [animals, setAnimals] = useState<Pet[]>([]);
-
   const [editPets, setEditPets] = useState(false);
 
   const location = formatAddressToObj(p.location);
 
   const isOwner = useMemo(() => user?.id === p.owner.id, [user, p]);
 
-  const mapCenter = { lat: location.lat, lng: location.lng };
+  const mapCenter = {
+    lat: location.lat as number,
+    lng: location.lng as number,
+  };
 
   const mapOptions = useMemo<google.maps.MapOptions>(
     () => ({
@@ -56,6 +57,10 @@ export default function Petshop({ petshopData: p }: Props) {
     };
     fetchAnimals();
   }, []);
+
+  useEffect(() => {
+    if (animals.length === 0 && deleteablePet) setDeleteablePet(false);
+  }, [animals, deleteablePet]);
 
   useEffect(() => {
     document.body.addEventListener("click", handleClickOutside);
@@ -94,10 +99,16 @@ export default function Petshop({ petshopData: p }: Props) {
   };
 
   const deletePet = async (petId: number) => {
-    await fetchJson(`${window.location.origin}/api/pets/${petId}`, {
-      method: "DELETE",
-    });
-    setAnimals((prev) => prev.filter((pets) => pets.id !== petId));
+    try {
+      await fetchJson(`${window.location.origin}/api/pets/${petId}`, {
+        method: "DELETE",
+      });
+      setAnimals((prev) => prev.filter((pets) => pets.id !== petId));
+    } catch (error) {
+      if (error instanceof FetchError) {
+        console.error(error);
+      }
+    }
   };
 
   const closeNewPetForm = () => setShowNewPetForm(false);
@@ -173,7 +184,7 @@ export default function Petshop({ petshopData: p }: Props) {
                   <button
                     className="uppercase text-custom-red"
                     onClick={() => setDeleteablePet(true)}
-                    disabled={deleteablePet}
+                    disabled={deleteablePet || animals.length === 0}
                   >
                     Remover
                   </button>
@@ -182,18 +193,26 @@ export default function Petshop({ petshopData: p }: Props) {
             )}
           </div>
 
-          <PetFilterBar />
+          {animals.length > 0 ? (
+            <>
+              <PetFilterBar />
 
-          <div className="flex flex-wrap justify-center gap-4 mt-5">
-            {animals.map((pet) => (
-              <PetCard
-                key={pet.id}
-                pet={pet}
-                deleteable={deleteablePet}
-                handleDelete={deletePet}
-              />
-            ))}
-          </div>
+              <div className="flex flex-wrap justify-center gap-4 mt-5">
+                {animals.map((pet) => (
+                  <PetCard
+                    key={pet.id}
+                    pet={pet}
+                    deleteable={deleteablePet}
+                    handleDelete={deletePet}
+                  />
+                ))}
+              </div>
+            </>
+          ) : (
+            <div className="p-5 text-lg uppercase font-noto-sans font-semibold text-custom-gray">
+              <h2>Nenhum animal disponível</h2>
+            </div>
+          )}
         </div>
       </div>
       {showNewPetForm && (

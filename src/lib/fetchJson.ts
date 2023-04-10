@@ -25,6 +25,7 @@ export default async function fetchJson<JSON = unknown>(
     response: Response;
     data: {
       message: string;
+      status?: number
     };
     constructor({
       message,
@@ -35,6 +36,7 @@ export default async function fetchJson<JSON = unknown>(
       response: Response;
       data: {
         message: string;
+        status?: number
       };
     }) {
       // Pass remaining arguments (including vendor specific ones) to parent constructor

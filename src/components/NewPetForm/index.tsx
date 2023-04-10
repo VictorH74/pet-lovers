@@ -29,8 +29,9 @@ const NewPetForm: React.FC<Props> = ({ handleSubmit, close }) => {
           validationSchema={petSchema}
           fieldVariant="outlined"
           fieldsContainerClassName="w-full mb-6"
+          submitBtnClassName="w-full"
         />
-        <button className="m-4 uppercase text-custom-red" type="button" onClick={close}>Cancelar</button>
+        <button className="m-4 uppercase text-custom-gray" type="button" onClick={close}>Cancelar</button>
       </FormBase>
     </div>
   );

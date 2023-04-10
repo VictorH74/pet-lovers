@@ -2,6 +2,7 @@ import { Form, Formik } from "formik";
 import Fields from "../Fields";
 import Yup from "yup";
 import React from "react";
+import Button from "../Button";
 
 interface Props {
   initialValues: {};
@@ -14,6 +15,7 @@ interface Props {
   belowTheFields?: JSX.Element;
   before?: JSX.Element;
   fieldsContainerClassName?: string;
+  submitBtnClassName?: string;
 }
 
 const WithFormik: React.FC<Props> = (props) => {
@@ -31,9 +33,8 @@ const WithFormik: React.FC<Props> = (props) => {
 
               <div
                 className={
-                  "grid place gap-4" +
-                    " " +
-                    props.fieldsContainerClassName || ""
+                  "grid place gap-4" + " " + props.fieldsContainerClassName ||
+                  ""
                 }
               >
                 {props.aboveTheFields || ""}
@@ -49,12 +50,12 @@ const WithFormik: React.FC<Props> = (props) => {
                 {props.belowTheFields || ""}
               </div>
             </div>
-            <button
+            <Button
               type="submit"
-              className="bg-custom-blue uppercase px-10 py-3 rounded-3xl hover:px-14 duration-200 text-white"
+              className={props.submitBtnClassName || "hover:px-14 duration-150"}
             >
               {props.submitBtnLabel}
-            </button>
+            </Button>
           </Form>
         </div>
       )}
