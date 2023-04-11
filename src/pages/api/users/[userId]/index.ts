@@ -4,8 +4,12 @@ import { validateLocation } from "@/utils/validations";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import bcrypt from "bcrypt";
+import { sessionOptions } from "@/lib/session";
+import { withIronSessionApiRoute } from "iron-session/next";
 
-export default async function handler(
+export default withIronSessionApiRoute(userRoute, sessionOptions);
+
+async function userRoute(
   req: NextApiRequest,
   res: NextApiResponse<
     Partial<User> | { error: string } | { message: string; status?: number }
@@ -27,7 +31,6 @@ export default async function handler(
           .status(404)
           .send({ message: "Usuário não encontrado", status: 404 });
 
-      // res.status(200).json(formatUser(user));
       res.status(200).json(user);
     } else if (req.method === "PUT") {
       const userData: Partial<User> = req.body;
@@ -43,6 +46,8 @@ export default async function handler(
       }
 
       const user = await UserService.updateUser(userId, userData);
+      req.session.user = user;
+      await req.session.save();
       res.status(200).json(user);
     } else if (req.method === "DELETE") {
       await UserService.deleteUser(userId);

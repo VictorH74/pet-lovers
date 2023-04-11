@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { formatAddressToObj, getBaseUrl } from "@/utils/helpers";
+import { formatLocationToObj, getBaseUrl } from "@/utils/helpers";
 import { Pet, PetShop, User } from "@prisma/client";
-import { GetServerSideProps } from "next";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/router";
 import StarIcon from "@mui/icons-material/Star";
 import { useEffect, useMemo, useState } from "react";
@@ -21,7 +21,7 @@ interface Props {
   petshopData: FinalPetShop;
 }
 
-export default function Petshop({ petshopData: p }: Props) {
+export default function Petshop({ petshopData: p }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
   const libraries = useMemo(() => ["places"], []);
   const { user } = useUser();
@@ -30,7 +30,7 @@ export default function Petshop({ petshopData: p }: Props) {
   const [animals, setAnimals] = useState<Pet[]>([]);
   const [editPets, setEditPets] = useState(false);
 
-  const location = formatAddressToObj(p.location);
+  const location = formatLocationToObj(p.location);
 
   const isOwner = useMemo(() => user?.id === p.owner.id, [user, p]);
 

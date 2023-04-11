@@ -34,16 +34,9 @@ export class UserModel {
         return prisma.user.create({ data: { ...userData, password: hashedPassword } })
     }
 
-    public static retrieveUser(id: string) {
-        const select = {
-            id: true,
-            name: true,
-            email: true,
-            phone: true,
-            location: true
-        }
-
-        return prisma.user.findUnique({ where: { id }, select })
+    public static async retrieveUser(id: string): Promise<User | null> {
+        let user = await prisma.user.findUnique({ where: { id } })
+        return user
     }
 
     public static async updateUser(id: string, userData: Partial<User>) {

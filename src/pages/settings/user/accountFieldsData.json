@@ -8,9 +8,5 @@
             "label": "Telefone",
             "name": "phone",
             "type": "phone"
-        },
-        {
-            "label": "Endereço",
-            "name": "location"
         }
 ]

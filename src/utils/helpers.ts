@@ -7,7 +7,7 @@ export function formatDate(date: Date): string {
   return `${day}/${month}/${year}`;
 }
 
-export const formatAddressToObj = (location: string | null) => {
+export const formatLocationToObj = (location: string | null) => {
   if (!location) return {lat: "", lng: "", anddress: ""}
 
   let locationArray = location.split("__");
@@ -18,7 +18,7 @@ export const formatAddressToObj = (location: string | null) => {
   };
 };
 
-export const formatAddressToString = (location: {
+export const formatLocationToString = (location: {
   lat: number;
   lng: number;
   address: string;
@@ -37,7 +37,7 @@ export const formatPhone = (phone: string): string => {
 
 export const formatUser = (user: Partial<User>) => {
   if (user.location)
-    return { ...user, location: formatAddressToObj(user.location) };
+    return { ...user, location: formatLocationToObj(user.location) };
 
   return user;
 };

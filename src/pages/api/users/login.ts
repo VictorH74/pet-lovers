@@ -17,7 +17,9 @@ async function loginRoute(
     const user = await UserService.getUserByEmail(userData.email);
 
     if (!user)
-      return res.status(404).send({ message: "Email não encontrado", status: 404 });
+      return res
+        .status(404)
+        .send({ message: "Email não encontrado", status: 404 });
 
     const isPasswordCorrect = await bcrypt.compare(
       userData.password,

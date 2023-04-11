@@ -1,4 +1,4 @@
-import { formatAddressToObj, formatPhone } from "@/utils/helpers";
+import { formatLocationToObj, formatPhone } from "@/utils/helpers";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import PhoneIcon from "@mui/icons-material/Phone";
 import StarIcon from "@mui/icons-material/Star";
@@ -6,7 +6,7 @@ import Link from "next/link";
 import { PetShop } from "@prisma/client";
 
 const PetshopCard = (props: PetShop) => {
-  const location = formatAddressToObj(props.location);
+  const location = formatLocationToObj(props.location);
 
   return (
     <div className="flex flex-col w-[300px] min-h-[300px] p-2 text-center justify-between">

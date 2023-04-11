@@ -5,24 +5,14 @@ import data from "./data.json";
 import { Schema } from "./validationSchema";
 import { TextField } from "@mui/material";
 import { useState } from "react";
-import { API_KEY } from "@/utils/constants";
-import { useDebounce } from "react-use";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { PetShop } from "@prisma/client";
 import { useRouter } from "next/router";
 import fetchJson from "@/lib/fetchJson";
 import useUser from "@/lib/useUser";
-import { formatAddressToString } from "@/utils/helpers";
+import { formatLocationToString } from "@/utils/helpers";
 import AddIcon from "@mui/icons-material/Add";
 import Button from "@/components/Button";
-import Options from "@/components/Options";
-
-const apiKey = API_KEY;
-const geocodeJson = "https://maps.googleapis.com/maps/api/geocode/json";
-
-type ErrorMsg = {
-  emptyLocation: boolean;
-};
+import LocationField from "@/components/LocationField";
 
 interface IFormValues {
   name: string;
@@ -34,50 +24,10 @@ interface IFormValues {
 const PetshopRegister = () => {
   const router = useRouter();
   const { user } = useUser({ redirectTo: "/signup" });
-  const [loadingLocation, setLoadingLocation] = useState(false);
   const [specieInputValue, setSpecieInputValue] = useState("");
-  const [locationInputValue, setLocationInputValue] = useState("");
-  const [selectedAddress, setSelectedAddress] = useState<string | undefined>(
-    undefined
-  );
-  const [response, setResponse] = useState<any[]>([]);
+
+  const [location, setLocation] = useState<string | null>(null);
   const [petSpecies, setSpecieList] = useState<string[]>([]);
-  const [location, setLocation] = useState<
-    { lat: number; lng: number; address: string } | undefined
-  >(undefined);
-  const [errorMsg, setErrorMsg] = useState<ErrorMsg>({
-    emptyLocation: false,
-  });
-
-  useDebounce(
-    () => {
-      if (!locationInputValue) return;
-      geocode();
-    },
-    1000,
-    [locationInputValue]
-  );
-
-  const clear = () => setResponse([]);
-
-  const geocode = async () => {
-    clear();
-
-    try {
-      setLoadingLocation(true);
-      let res = await (
-        await fetch(
-          `${geocodeJson}?address=${locationInputValue}&language=pt-BR&key=${apiKey}`
-        )
-      ).json();
-
-      let { results } = res;
-      setResponse(results);
-      setLoadingLocation(false);
-    } catch (e) {
-      alert("Geocode was not successful for the following reason: " + e);
-    }
-  };
 
   const addSpecie = () => {
     if (!specieInputValue) return;
@@ -97,25 +47,15 @@ const PetshopRegister = () => {
   };
 
   const handleSubmit = async (values: IFormValues) => {
-    if (!location) {
-      setErrorMsg((prev) => ({
-        ...prev,
-        emptyLocation: true,
-      }));
-    }
+    if (!location) return alert("Endereço obrigatório");
 
     let finalValues = {
       ...values,
-      location: formatAddressToString(
-        location ||
-          (() => {
-            throw new Error("location object not defined");
-          })()
-      ),
+      location,
       petSpecies,
       userId: user?.id,
     };
-    // console.log(finalValues)
+    // console.log(finalValues);
 
     let res: Pick<PetShop, "id"> = await fetchJson("/api/petshops/add/", {
       method: "POST",
@@ -195,54 +135,25 @@ const PetshopRegister = () => {
                   </div>
                 )}
 
-                <TextField
-                  autoComplete="none"
-                  placeholder={locationInputValue || "Digite seu endereço"}
-                  sx={textFieldStyle}
-                  variant={"standard"}
-                  className="text-white"
-                  label={<p className="text-white">Endereço</p>}
-                  id="address"
-                  name="address"
-                  value={locationInputValue}
-                  onChange={(e) => {
-                    let { value } = e.target;
-                    setLocationInputValue(value);
-                  }}
-                  onBlur={() =>
-                    setErrorMsg((prev) => ({
-                      ...prev,
-                      emptyLocation: !!location,
-                    }))
+                <LocationField
+                  required
+                  inputElement={
+                    <TextField
+                      autoComplete="none"
+                      sx={textFieldStyle}
+                      variant={"standard"}
+                      className="text-white"
+                      label={<p className="text-white">Endereço</p>}
+                      id="address"
+                      name="address"
+                    />
+                  }
+                  itemHandleClick={(locationObj) =>
+                    setLocation(formatLocationToString(locationObj))
                   }
                 />
-                {selectedAddress ? (
-                  <span className="flex items-center text-xs mt-0 text-left text-white w-fit p-[4px] rounded-md bg-custom-blue font-semibold">
-                    <LocationOnIcon />
-                    &nbsp;{selectedAddress}
-                  </span>
-                ) : (
-                  errorMsg.emptyLocation && (
-                    <p className="text-right text-custom-red font-semibold uppercase text-xs">
-                      Nenhum endereço selecionado
-                    </p>
-                  )
-                )}
               </div>
-              <Options
-                array={response}
-                isLoading={loadingLocation}
-                item={(item) => item.formatted_address}
-                itemBefore={<LocationOnIcon />}
-                itemHandleClick={(item) => {
-                  setSelectedAddress(item.formatted_address);
-                  setLocation({
-                    ...item?.geometry?.location,
-                    address: item.formatted_address,
-                  });
-                  clear();
-                }}
-              />
+
               <Button type="submit" className=" mt-10 rounded-3xl">
                 Cadastrar
               </Button>

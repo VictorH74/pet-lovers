@@ -4,7 +4,7 @@ import React from "react";
 import data from "./data.json";
 
 interface Props {
-  children: JSX.Element;
+  children: JSX.Element | JSX.Element[];
 }
 
 const activeLink = "border-b-2";

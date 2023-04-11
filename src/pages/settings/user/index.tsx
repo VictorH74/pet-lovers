@@ -3,21 +3,30 @@ import { sessionOptions } from "@/lib/session";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { User } from "@prisma/client";
 import { withIronSessionSsr } from "iron-session/next";
-import { GetServerSidePropsContext } from "next";
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import namefieldsData from "./namefieldsData.json";
 import accountFieldsData from "./accountFieldsData.json";
-import React, { FormEvent, useState } from "react";
+import React, { ChangeEvent, FormEvent, useCallback, useState } from "react";
 import SimpleInputField from "@/components/SimpleInputField";
-import { formatAddressToObj } from "@/utils/helpers";
+import { formatLocationToObj } from "@/utils/helpers";
 import Button from "@/components/Button";
 import fetchJson, { FetchError } from "@/lib/fetchJson";
 import useUser from "@/lib/useUser";
+import LocationField from "@/components/LocationField";
+import { formatLocationToString } from "@/utils/helpers";
 
 type NameData = { name: string; surname: string };
+
 type AccountData = {
   email: string;
   phone: string;
-  location: string;
+  address: string;
+};
+
+type FinalAccountData = {
+  email: string;
+  phone: string | null;
+  location?: string;
 };
 
 const UserSettings = ({ user }: { user: User }) => {
@@ -29,10 +38,19 @@ const UserSettings = ({ user }: { user: User }) => {
   const [accountData, setAccountData] = useState<AccountData>({
     email: user.email,
     phone: user.phone || "",
-    location: formatAddressToObj(user.location).address || "",
+    address: formatLocationToObj(user.location).address || "",
   });
+  const [location, setLocation] = useState<string | null>(null);
 
   const deleteAccount = () => alert("Em desenvolvimento");
+
+  const handleInputChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.currentTarget;
+    setAccountData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  }, []);
 
   const saveName = async (e: FormEvent) => {
     e.preventDefault();
@@ -65,59 +83,86 @@ const UserSettings = ({ user }: { user: User }) => {
 
   const savesetAccountData = async (e: FormEvent) => {
     e.preventDefault();
-    console.log(accountData);
+
+    let phone = accountData.phone || null;
+
+    let finalAccountData: FinalAccountData = {
+      email: accountData.email,
+      phone,
+    };
+
+    if (location) finalAccountData.location = location;
+
+    // console.log(finalAccountData);
+
+    try {
+      mutateUser(
+        await fetchJson(`${window.location.origin}/api/users/${user.id}`, {
+          method: "PUT",
+          headers: { "Content-type": "application/json" },
+          body: JSON.stringify(finalAccountData),
+        })
+      );
+      alert("Dados atualizados! 🙂👍");
+    } catch (error) {
+      if (error instanceof FetchError) {
+        console.error(error.data);
+        // setError(error.data);
+      } else {
+        console.error("An unexpected error happened:", error);
+      }
+    }
   };
 
   return (
     <SettingsNavBar>
-      <>
-        <form className="grid place-items-center" onSubmit={saveName}>
-          <div className="flex gap-3 items-center">
-            <AccountCircleIcon sx={{ color: "white", fontSize: 100 }} />
-            <div className="border-l-2 pl-5 grid gap-4">
-              {namefieldsData.map((data) => (
-                <SimpleInputField
-                  key={data.name}
-                  {...data}
-                  inputClassName="w-[235px]"
-                  value={nameData[data.name as keyof typeof nameData]}
-                  onChange={(e) => {
-                    const { name, value } = e.currentTarget;
-                    setName((prev) => ({
-                      ...prev,
-                      [name]: value,
-                    }));
-                  }}
-                />
-              ))}
-            </div>
+      <form className="grid place-items-center" onSubmit={saveName}>
+        <div className="flex gap-3 items-center">
+          <AccountCircleIcon sx={{ color: "white", fontSize: 100 }} />
+          <div className="border-l-2 pl-5 grid gap-4">
+            {namefieldsData.map((data) => (
+              <SimpleInputField
+                key={data.name}
+                {...data}
+                inputClassName="w-[235px]"
+                value={nameData[data.name as keyof typeof nameData]}
+                onChange={handleInputChange}
+              />
+            ))}
           </div>
-          <Button className="mt-4 w-64">Salvar</Button>
-        </form>
+        </div>
+        <Button className="mt-4 w-64">Salvar</Button>
+      </form>
 
-        <div className="bg-white h-1 w-full rounded-xl" />
+      <div className="bg-white h-1 w-full rounded-xl" />
 
-        <form
-          className="w-full max-w-[500px] m-auto grid gap-4"
-          onSubmit={savesetAccountData}
-        >
-          {accountFieldsData.map((data) => (
-            <SimpleInputField
-              key={data.name}
-              {...data}
-              value={accountData[data.name as keyof typeof accountData]}
-              onChange={(e) => {
-                const { name, value } = e.currentTarget;
-                setAccountData((prev) => ({
-                  ...prev,
-                  [name]: value,
-                }));
-              }}
-            />
-          ))}
-          <Button className="w-64 m-auto">Salvar</Button>
-        </form>
-      </>
+      <form
+        className="w-full max-w-[500px] m-auto grid gap-4"
+        onSubmit={savesetAccountData}
+      >
+        {accountFieldsData.map((data) => (
+          <SimpleInputField
+            key={data.name}
+            {...data}
+            value={accountData[data.name as keyof typeof accountData]}
+            onChange={(e) => {
+              const { name, value } = e.currentTarget;
+              setAccountData((prev) => ({
+                ...prev,
+                [name]: value,
+              }));
+            }}
+          />
+        ))}
+        <LocationField
+          inputElement={<SimpleInputField label="Endereço" />}
+          itemHandleClick={(locationObj) =>
+            setLocation(formatLocationToString(locationObj))
+          }
+          value={accountData.address}
+        />
+        <Button className="w-64 m-auto">Salvar</Button>
+      </form>
     </SettingsNavBar>
   );
 };

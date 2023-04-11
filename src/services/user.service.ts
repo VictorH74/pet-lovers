@@ -17,7 +17,7 @@ export class UserService {
     return user;
   }
 
-  public static async retrieveUser(userId: string) {
+  public static async retrieveUser(userId: string): Promise<User | null> {
     const user = await UserModel.retrieveUser(userId);
     return user;
   }

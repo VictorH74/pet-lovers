@@ -9,18 +9,16 @@ import { GetServerSidePropsContext } from "next";
 import { sessionOptions } from "@/lib/session";
 import { PetShop } from "@prisma/client";
 import {
-  formatAddressToObj,
-  formatAddressToString,
+  formatLocationToObj,
+  formatLocationToString,
   getBaseUrl,
 } from "@/utils/helpers";
 import { useRouter } from "next/router";
 import fetchJson, { FetchError } from "@/lib/fetchJson";
 import { API_KEY } from "@/utils/constants";
-import { useDebounce } from "react-use";
-import Options from "@/components/Options";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { validateLocation } from "@/utils/validations";
 import Button from "@/components/Button";
+import LocationField from "@/components/LocationField";
 
 const apiKey = API_KEY;
 const geocodeJson = "https://maps.googleapis.com/maps/api/geocode/json";
@@ -41,10 +39,6 @@ type FinalPetshopData = {
   location?: string;
 };
 
-type ErrorMsg = {
-  emptyLocation: boolean;
-};
-
 const PetShopSettings = ({ petshop }: { petshop: PetShop }) => {
   const [petshopData, setPetshopData] = useState<PetshopData>({
     name: petshop.name,
@@ -57,48 +51,7 @@ const PetShopSettings = ({ petshop }: { petshop: PetShop }) => {
   );
   const [specieInputValue, setSpecieInputValue] = useState<string>("");
   const router = useRouter();
-  const [locationInputValue, setLocationInputValue] = useState("");
-  const [selectedAddress, setSelectedAddress] = useState<string | undefined>(
-    formatAddressToObj(petshop.location).address
-  );
-  const [response, setResponse] = useState<any[]>([]);
-  const [location, setLocation] = useState<
-    { lat: number; lng: number; address: string } | undefined
-  >(undefined);
-  const [loadingLocation, setLoadingLocation] = useState(false);
-  const [errorMsg, setErrorMsg] = useState<ErrorMsg>({
-    emptyLocation: false,
-  });
-
-  useDebounce(
-    () => {
-      if (!locationInputValue) return;
-      geocode();
-    },
-    1000,
-    [locationInputValue]
-  );
-
-  const clear = () => setResponse([]);
-
-  const geocode = async () => {
-    clear();
-
-    try {
-      setLoadingLocation(true);
-      let res = await (
-        await fetch(
-          `${geocodeJson}?address=${locationInputValue}&language=pt-BR&key=${apiKey}`
-        )
-      ).json();
-
-      let { results } = res;
-      setResponse(results);
-      setLoadingLocation(false);
-    } catch (e) {
-      alert("Geocode was not successful for the following reason: " + e);
-    }
-  };
+  const [location, setLocation] = useState<string | null>(null);
 
   const addSpecie = () => {
     if (!specieInputValue) return;
@@ -132,15 +85,9 @@ const PetShopSettings = ({ petshop }: { petshop: PetShop }) => {
     };
 
     if (location) {
-      let locationStr = formatAddressToString(
-        location ||
-          (() => {
-            throw new Error("location object not defined");
-          })()
-      );
-      if (!validateLocation(locationStr))
-        return alert("Formato de localização inválida: " + locationStr);
-      finalData["location"] = locationStr;
+      if (!validateLocation(location))
+        return alert("Formato de localização inválida: " + location);
+      finalData.location = location;
     }
 
     console.log("finalData", finalData);
@@ -171,56 +118,26 @@ const PetShopSettings = ({ petshop }: { petshop: PetShop }) => {
       {petshop?.id ? (
         <form className="grid gap-10" onSubmit={saveData}>
           <div className="w-full max-w-[500px] m-auto">
-            <div className="">
-              {petshopFieldsData.map((data) => (
-                <SimpleInputField
-                  key={data.name}
-                  {...data}
-                  value={petshopData[data.name as keyof typeof petshopData]}
-                  onChange={(e) => {
-                    const { name, value } = e.currentTarget;
-                    setPetshopData((prev) => ({
-                      ...prev,
-                      [name]: value,
-                    }));
-                  }}
-                />
-              ))}
+            {petshopFieldsData.map((data) => (
               <SimpleInputField
-                name="location"
-                label="Endereço"
-                value={locationInputValue}
+                key={data.name}
+                {...data}
+                value={petshopData[data.name as keyof typeof petshopData]}
                 onChange={(e) => {
-                  let { value } = e.target;
-                  setLocationInputValue(value);
+                  const { name, value } = e.currentTarget;
+                  setPetshopData((prev) => ({
+                    ...prev,
+                    [name]: value,
+                  }));
                 }}
               />
-            </div>
-            {selectedAddress ? (
-              <span className="flex items-center text-xs mt-0 text-left text-white w-fit p-[4px] rounded-md bg-custom-blue font-semibold">
-                <LocationOnIcon />
-                &nbsp;{selectedAddress}
-              </span>
-            ) : (
-              errorMsg.emptyLocation && (
-                <p className="text-right text-custom-red font-semibold uppercase text-xs">
-                  Nenhum endereço selecionado
-                </p>
-              )
-            )}
-            <Options
-              array={response}
-              isLoading={loadingLocation}
-              item={(item) => item.formatted_address}
-              itemBefore={<LocationOnIcon />}
-              itemHandleClick={(item) => {
-                setSelectedAddress(item.formatted_address);
-                setLocation({
-                  ...item?.geometry?.location,
-                  address: item.formatted_address,
-                });
-                clear();
-              }}
+            ))}
+            <LocationField
+              inputElement={<SimpleInputField label="Endereço" />}
+              itemHandleClick={(locationObj) =>
+                setLocation(formatLocationToString(locationObj))
+              }
+              value={formatLocationToObj(petshop.location).address}
             />
           </div>
 
@@ -263,9 +180,7 @@ const PetShopSettings = ({ petshop }: { petshop: PetShop }) => {
               </div>
             )}
           </div>
-          <Button className="w-64 m-auto">
-            Salvar
-          </Button>
+          <Button className="w-64 m-auto">Salvar</Button>
         </form>
       ) : (
         <div className="text-white uppercase grid place-items-center gap-4">
