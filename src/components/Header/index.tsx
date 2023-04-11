@@ -10,9 +10,11 @@ import Popper from "@mui/material/Popper";
 import MenuItem from "@mui/material/MenuItem";
 import MenuList from "@mui/material/MenuList";
 import { SyntheticEvent, useEffect, useRef, useState } from "react";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import fetchJson from "@/lib/fetchJson";
 import { useRouter } from "next/router";
+import AccountIcon from "../AccountIcon";
+
+const activeLink = "font-semibold";
 
 const Header = () => {
   const { user, mutateUser } = useUser();
@@ -43,10 +45,10 @@ const Header = () => {
     }
 
     prevOpen.current = open;
-  }, [open])
+  }, [open]);
 
   const logout = async () => {
-    await fetchJson("/api/users/logout", { method: "POST" })
+    await fetchJson("/api/users/logout", { method: "POST" });
     mutateUser(undefined, false);
     router.replace("/login");
   };
@@ -57,7 +59,11 @@ const Header = () => {
         <Logo />
         <div className="flex gap-x-10 items-center">
           {navData.map((data) => (
-            <Link className="header-link" key={data.title} href={data.path}>
+            <Link
+              className={router.pathname === data.path ? activeLink : ""}
+              key={data.title}
+              href={data.path}
+            >
               <p className="text-slate-50 font-noto-sans text-base uppercase">
                 {data.title}
               </p>
@@ -75,7 +81,7 @@ const Header = () => {
                 aria-haspopup="true"
                 onClick={handleToggle}
               >
-                <AccountCircleIcon sx={{ color: "white", fontSize: 50 }} />
+                <AccountIcon size={50} />
               </Button>
               <Popper
                 className="z-10"

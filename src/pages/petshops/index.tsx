@@ -1,3 +1,5 @@
+import PawIcon from "@/components/PawIcon";
+import PetShopFilterBar from "@/components/PetShopFilterBar";
 import PetshopCard from "@/components/PetshopCard";
 import { PetShop } from "@prisma/client";
 import { use, useEffect, useState } from "react";
@@ -18,9 +20,7 @@ export default function PetshopList() {
   }, []);
 
   if (isLoading) {
-    return (
-      <div>Loading...</div>
-    )
+    return <div>Loading...</div>;
   }
 
   if (petshops.length === 0 && !isLoading) {
@@ -35,6 +35,7 @@ export default function PetshopList() {
 
   return (
     <section className="text-center m-auto w-[100%]">
+      <PetShopFilterBar />
       <div className="flex flex-wrap justify-center gap-5 my-[30px]">
         {petshops.map((petshop) => (
           <PetshopCard key={petshop.id} {...petshop} />

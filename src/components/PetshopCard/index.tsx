@@ -27,7 +27,7 @@ const PetshopCard = (props: PetShop) => {
             <PhoneIcon /> {formatPhone(props.phone)}
           </p>
           <p className="text-stone-600">
-            <StarIcon sx={{ color: "#F6E757" }} /> 4.7
+            <StarIcon sx={{ color: "#368FC1" }} /> 4.7
           </p>
         </div>
       </div>

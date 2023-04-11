@@ -1,6 +1,5 @@
 import SettingsNavBar from "@/components/SettingsNavBar";
 import { sessionOptions } from "@/lib/session";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { User } from "@prisma/client";
 import { withIronSessionSsr } from "iron-session/next";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
@@ -14,6 +13,7 @@ import fetchJson, { FetchError } from "@/lib/fetchJson";
 import useUser from "@/lib/useUser";
 import LocationField from "@/components/LocationField";
 import { formatLocationToString } from "@/utils/helpers";
+import AccountIcon from "@/components/AccountIcon";
 
 type NameData = { name: string; surname: string };
 
@@ -118,7 +118,7 @@ const UserSettings = ({ user }: { user: User }) => {
     <SettingsNavBar>
       <form className="grid place-items-center" onSubmit={saveName}>
         <div className="flex gap-3 items-center">
-          <AccountCircleIcon sx={{ color: "white", fontSize: 100 }} />
+          <AccountIcon size={100} className="mr-2" />
           <div className="border-l-2 pl-5 grid gap-4">
             {namefieldsData.map((data) => (
               <SimpleInputField
