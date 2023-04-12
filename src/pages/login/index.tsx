@@ -7,13 +7,33 @@ import GoogleBtn from "@/components/GoogleBtn";
 import Line from "@/components/Line";
 import WithFormik from "@/components/WithFormik";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
+import ErrorMsg from "@/components/ErrorMsg";
+
+type ErrorsStr =
+  | "notEmailAndPassword"
+  | "invalidEmail"
+  | "invalidPassword"
+  | string;
 
 interface IFormValues {
   email: string;
   password: string;
 }
+
+const getErrorMsg = (str: ErrorsStr): string => {
+  switch (str) {
+    case "notEmailAndPassword":
+      return "Por favor, informe o email e senha.";
+    case "invalidEmail":
+      return "Email inválido.";
+    case "invalidPassword":
+      return "Senha inválida.";
+    default:
+      return "Ocorreu algum erro inesperado.";
+  }
+};
 
 const Login = () => {
   const { data: session } = useSession();
@@ -21,6 +41,13 @@ const Login = () => {
   const [error, setError] = useState<{ message: string; status?: number }>({
     message: "",
   });
+
+  useEffect(() => {
+    if (router.query.error) {
+      let msg = String(router.query.error) as ErrorsStr;
+      setError({ message: getErrorMsg(msg) });
+    }
+  }, [router]);
 
   const handleSubmit = async ({ email, password }: IFormValues) => {
     signIn("credentials", { email, password, callbackUrl: "/" });
@@ -30,7 +57,7 @@ const Login = () => {
 
   return (
     <div className="@container">
-      <div className="h-screen place-items-center @[500px]:grid block">
+      <div className="@[500px]:h-screen place-items-center @[500px]:grid block">
         <FormBase className="@[500px]:rounded-lg">
           <FormLogo text="Faça seu login" />
           <WithFormik
@@ -42,14 +69,11 @@ const Login = () => {
             onSubmit={handleSubmit}
             fieldArray={data}
             submitBtnLabel="Entrar"
+            submitBtnClassName="w-full"
             fieldVariant="outlined"
             belowTheFields={
               <>
-                {error?.message && (
-                  <p className="text-red-500 text-right uppercase">
-                    {error.message}
-                  </p>
-                )}
+                {error?.message && <ErrorMsg>{error.message}</ErrorMsg>}
                 <Link href="/signup">Fazer cadastro</Link>
               </>
             }
@@ -57,7 +81,7 @@ const Login = () => {
           />
 
           <Line>OU</Line>
-          <GoogleBtn onClick={() => alert("Em desenvolvimento")} />
+          <GoogleBtn />
         </FormBase>
       </div>
     </div>

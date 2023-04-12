@@ -1,16 +1,14 @@
 import Button from "@/components/Button";
+import ErrorMsg from "@/components/ErrorMsg";
 import SettingsNavBar from "@/components/SettingsNavBar";
 import SimpleInputField from "@/components/SimpleInputField";
 import fetchJson, { FetchError } from "@/lib/fetchJson";
 import { User } from "@prisma/client";
 import { GetServerSidePropsContext } from "next";
 import { ChangeEvent, FormEvent, useState } from "react";
-
-const ErrorMsg = ({ children }: { children: string }) => (
-  <p className="text-right uppercase text-red-600 text-xs font-semibold">
-    {children}
-  </p>
-);
+import { authOptions } from "../api/auth/[...nextauth]";
+import { Session, getServerSession } from "next-auth";
+import { getBaseUrl } from "@/utils/helpers";
 
 type MessageError = { message: string; status?: number } | null;
 
@@ -18,6 +16,8 @@ type ResponseError = {
   prevPassword: MessageError;
   newPassword: MessageError;
 };
+
+var hasError = false;
 
 const UserPasswordSettings = ({ user }: { user: User }) => {
   const [responseError, setError] = useState<ResponseError>({
@@ -32,6 +32,21 @@ const UserPasswordSettings = ({ user }: { user: User }) => {
     newPassword: "",
   });
 
+  const verifyPassword = (key: string, pass?: boolean) => {
+    if (!password[key as keyof typeof password] && !pass) {
+      setError((prev) => ({ ...prev, [key]: { message: "Obrigatório" } }));
+      hasError = true;
+    } else if (password[key as keyof typeof password].length < 8 && !pass) {
+      setError((prev) => ({
+        ...prev,
+        [key]: { message: "Deve ter ao menos 8 caractéres" },
+      }));
+      hasError = true;
+    } else {
+      setError((prev) => ({ ...prev, [key]: null }));
+    }
+  };
+
   const updatePassword = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.currentTarget;
     setPassword((prev) => ({ ...prev, [name]: value }));
@@ -40,22 +55,8 @@ const UserPasswordSettings = ({ user }: { user: User }) => {
   const handlerSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    let hasError = false;
-
-    for (let key in password) {
-      if (!password[key as keyof typeof password]) {
-        setError((prev) => ({ ...prev, [key]: { message: "Obrigatório" } }));
-        hasError = true;
-      } else if (password[key as keyof typeof password].length < 8) {
-        setError((prev) => ({
-          ...prev,
-          [key]: { message: "Deve ter ao menos 8 caractéres" },
-        }));
-        hasError = true;
-      } else {
-        setError((prev) => ({ ...prev, [key]: null }));
-      }
-    }
+    verifyPassword("prevPassword", user.password === null);
+    verifyPassword("newPassword");
 
     if (hasError) return;
 
@@ -70,6 +71,8 @@ const UserPasswordSettings = ({ user }: { user: User }) => {
       );
 
       alert("Senha alterada com sucesso!");
+
+      if (!user.password) window.location.reload();
     } catch (error) {
       if (error instanceof FetchError) {
         console.error(error.data);
@@ -83,23 +86,25 @@ const UserPasswordSettings = ({ user }: { user: User }) => {
     <SettingsNavBar>
       <form className="text-center grid gap-4" onSubmit={handlerSubmit}>
         <div className="flex flex-wrap gap-4 justify-center text-left">
-          <div>
-            <SimpleInputField
-              labelClassName="uppercase"
-              label="Senha anterior"
-              name="prevPassword"
-              value={password.prevPassword}
-              onChange={updatePassword}
-            />
-            {responseError.prevPassword && (
-              <ErrorMsg>{responseError.prevPassword.message}</ErrorMsg>
-            )}
-          </div>
+          {user.password && (
+            <div>
+              <SimpleInputField
+                labelClassName="uppercase"
+                label="Senha anterior"
+                name="prevPassword"
+                value={password.prevPassword}
+                onChange={updatePassword}
+              />
+              {responseError.prevPassword && (
+                <ErrorMsg>{responseError.prevPassword.message}</ErrorMsg>
+              )}
+            </div>
+          )}
 
-          <div>
+          <div className={user.password ? "" : "max-w-[255px] w-full"}>
             <SimpleInputField
               labelClassName="uppercase"
-              label="Nova senha"
+              label={user.password ? "Nova senha" : "Definir senha"}
               name="newPassword"
               value={password.newPassword}
               onChange={updatePassword}
@@ -110,7 +115,7 @@ const UserPasswordSettings = ({ user }: { user: User }) => {
           </div>
         </div>
 
-        <Button className="w-64 m-auto">Salvar</Button>
+        <Button className="max-w-[255px] w-full m-auto">Salvar</Button>
       </form>
     </SettingsNavBar>
   );
@@ -120,9 +125,9 @@ export const getServerSideProps = async function ({
   req,
   res,
 }: GetServerSidePropsContext) {
-  const user = req.session.user;
+  const session = await getServerSession(req, res, authOptions);
 
-  if (user === undefined) {
+  if (!session?.user) {
     res.setHeader("location", "/login");
     res.statusCode = 302;
     res.end();
@@ -133,8 +138,20 @@ export const getServerSideProps = async function ({
     };
   }
 
+  const baseUrl = getBaseUrl(req);
+
+  let userData: User | any | null = null;
+
+  try {
+    userData = await fetchJson(`${baseUrl}/api/users/${session.user.id}`);
+  } catch (error) {
+    if (error instanceof FetchError && error.data.status === 404) {
+      userData = session.user;
+    }
+  }
+
   return {
-    props: { user: req.session.user },
+    props: { user: userData },
   };
 };
 

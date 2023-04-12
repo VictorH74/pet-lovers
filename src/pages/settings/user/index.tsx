@@ -30,7 +30,7 @@ type FinalAccountData = {
 };
 
 const UserSettings = ({ user }: { user: User }) => {
-  const { update } = useSession();
+  const { data: session, update } = useSession();
   const [nameData, setName] = useState<NameData>({
     name: user.name.split(" ")[0],
     surname: user.name.split(" ")[user.name.split(" ").length - 1] || "",
@@ -63,14 +63,11 @@ const UserSettings = ({ user }: { user: User }) => {
     name = name.trim();
 
     try {
-      let res = await fetchJson(
-        `${window.location.origin}/api/users/${user.id}`,
-        {
-          method: "PUT",
-          headers: { "Content-type": "application/json" },
-          body: JSON.stringify({ name }),
-        }
-      );
+      await fetchJson(`${window.location.origin}/api/users/${user.id}`, {
+        method: "PUT",
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify({ name }),
+      });
       update({ name });
       alert("Nome atualizado! 🙂👍");
     } catch (error) {
@@ -98,14 +95,11 @@ const UserSettings = ({ user }: { user: User }) => {
     // console.log(finalAccountData);
 
     try {
-      let res = await fetchJson(
-        `${window.location.origin}/api/users/${user.id}`,
-        {
-          method: "PUT",
-          headers: { "Content-type": "application/json" },
-          body: JSON.stringify(finalAccountData),
-        }
-      );
+      await fetchJson(`${window.location.origin}/api/users/${user.id}`, {
+        method: "PUT",
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify(finalAccountData),
+      });
       // update({ name });
 
       alert("Dados atualizados! 🙂👍");
@@ -123,7 +117,11 @@ const UserSettings = ({ user }: { user: User }) => {
     <SettingsNavBar>
       <form className="grid place-items-center" onSubmit={saveName}>
         <div className="flex gap-3 items-center">
-          <AccountIcon size={100} className="mr-2" />
+          <AccountIcon
+            size={100}
+            className="mr-2"
+            image={session?.user?.image}
+          />
           <div className="border-l-2 pl-5 grid gap-4">
             {namefieldsData.map((data) => (
               <SimpleInputField
@@ -197,7 +195,7 @@ export const getServerSideProps = async function ({
 
   const baseUrl = getBaseUrl(req);
 
-  console.log("Fethcing...")
+  console.log("Fethcing...");
 
   const user = await fetchJson(`${baseUrl}/api/users/${session.user.id}`);
 

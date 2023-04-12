@@ -8,6 +8,7 @@ interface Props {
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   inputClassName?: string;
   labelClassName?: string;
+  disabled?: boolean
 }
 
 const SimpleInputField: React.FC<Props> = (props) => {
@@ -26,6 +27,7 @@ const SimpleInputField: React.FC<Props> = (props) => {
         name={props.name}
         type={props.type || "text"}
         value={props.value}
+        disabled={props.disabled}
         onChange={props.onChange}
       />
     </div>

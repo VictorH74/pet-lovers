@@ -2,7 +2,8 @@
         {
             "label": "Email",
             "name": "email",
-            "type": "email"
+            "type": "email",
+            "disabled": true
         },
         {
             "label": "Telefone",

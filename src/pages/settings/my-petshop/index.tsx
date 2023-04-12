@@ -37,10 +37,10 @@ type FinalPetshopData = {
 
 const PetShopSettings = ({ petshop }: { petshop: PetShop }) => {
   const [petshopData, setPetshopData] = useState<PetshopData>({
-    name: petshop.name,
-    description: petshop.description || "",
-    website: petshop.website || "",
-    phone: petshop.phone,
+    name: petshop?.name,
+    description: petshop?.description || "",
+    website: petshop?.website || "",
+    phone: petshop?.phone,
   });
   const [petSpecies, setPetSpecies] = useState<string[]>(
     petshop?.petSpecies || []
@@ -212,12 +212,21 @@ export const getServerSideProps = async function ({
 
   const baseUrl = getBaseUrl(req);
 
-  const petshop = await fetchJson(
-    `${baseUrl}/api/petshops/my?userId=${session.user.id}`
-  );
+  try {
+    const petshop = await fetchJson(
+      `${baseUrl}/api/petshops/my?userId=${session.user.id}`
+    );
+    return {
+      props: { petshop },
+    };
+  } catch (error) {
+    if (error instanceof FetchError) {
+      console.error(error);
+    }
+  }
 
   return {
-    props: { petshop },
+    props: { petshop: null },
   };
 };
 

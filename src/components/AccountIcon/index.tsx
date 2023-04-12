@@ -15,7 +15,7 @@ const AccountIcon: React.FC<Props> = ({
 }) => (
   <>
     {image ? (
-      <Image className="rounded-full" src={image} alt="account image" width={size} height={size} />
+      <Image className={"rounded-full border-2" + " " + className} src={image} alt="account image" width={size} height={size} />
     ) : (
       <svg
         width={size}

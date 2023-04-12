@@ -13,7 +13,7 @@ const FormBase: React.FC<Props> = ({ children, className = "" }) => {
         className
       }
     >
-      <div className="p-[12%]">{children}</div>
+      <div className="@[500px]:p-[12%] px-[10px] py-[50px]">{children}</div>
     </div>
   );
 };

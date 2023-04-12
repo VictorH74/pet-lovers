@@ -52,6 +52,7 @@ model User {
   id        String   @id @default(uuid())
   name      String   @db.VarChar(100)
   email     String   @unique
+  image     String?
   password  String?
   phone     String?  @db.VarChar(11)
   location  String?

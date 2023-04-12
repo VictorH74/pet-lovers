@@ -8,6 +8,7 @@ import GoogleBtn from "@/components/GoogleBtn";
 import Line from "@/components/Line";
 import WithFormik from "@/components/WithFormik";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 interface IFormValues {
   name: string;
@@ -17,6 +18,7 @@ interface IFormValues {
 
 const UserRegister = () => {
   const router = useRouter();
+  const { data: session } = useSession();
 
   const handleSubmit = async (values: IFormValues) => {
     console.log(values);
@@ -34,12 +36,14 @@ const UserRegister = () => {
     router.replace("/login");
   };
 
+  if (session?.user) router.replace("/");
+
   return (
     <div className="@container">
       <div className="h-screen place-items-center @[500px]:grid block">
         <FormBase className="@[500px]:rounded-lg">
           <FormLogo text="cadastrar usuário" />
-          <GoogleBtn onClick={() => alert("Em desenvolvimento")} />
+          <GoogleBtn />
           <Line>OU</Line>
           <WithFormik
             initialValues={{

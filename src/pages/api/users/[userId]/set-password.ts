@@ -4,7 +4,6 @@ import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import bcrypt from "bcrypt";
 
-
 export default async function userRoute(
   req: NextApiRequest,
   res: NextApiResponse<
@@ -14,7 +13,6 @@ export default async function userRoute(
   try {
     if (req.method !== "POST")
       throw new Error(`Forbidden request method: ${req.method}`);
-
 
     const userId = req.query.userId as string;
 
@@ -32,9 +30,13 @@ export default async function userRoute(
 
     const { prevPassword, newPassword } = await req.body;
 
-    const isPasswordCorrect = await bcrypt.compare(prevPassword, user.password);
+    let isPasswordCorrect = false;
 
-    if (!isPasswordCorrect)
+    if (user.password) {
+      isPasswordCorrect = await bcrypt.compare(prevPassword, user.password);
+    }
+
+    if (!isPasswordCorrect && user.password)
       return res.status(400).send({ message: "Senha inválida", status: 400 });
 
     let hashedPass = await bcrypt.hash(newPassword, 10);
