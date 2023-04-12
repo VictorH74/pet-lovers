@@ -1,19 +1,19 @@
 import SettingsNavBar from "@/components/SettingsNavBar";
-import { sessionOptions } from "@/lib/session";
 import { User } from "@prisma/client";
-import { withIronSessionSsr } from "iron-session/next";
-import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
+import { GetServerSidePropsContext } from "next";
 import namefieldsData from "./namefieldsData.json";
 import accountFieldsData from "./accountFieldsData.json";
 import React, { ChangeEvent, FormEvent, useCallback, useState } from "react";
 import SimpleInputField from "@/components/SimpleInputField";
-import { formatLocationToObj } from "@/utils/helpers";
+import { formatLocationToObj, getBaseUrl } from "@/utils/helpers";
 import Button from "@/components/Button";
 import fetchJson, { FetchError } from "@/lib/fetchJson";
-import useUser from "@/lib/useUser";
 import LocationField from "@/components/LocationField";
 import { formatLocationToString } from "@/utils/helpers";
 import AccountIcon from "@/components/AccountIcon";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
+import { useSession } from "next-auth/react";
 
 type NameData = { name: string; surname: string };
 
@@ -30,7 +30,7 @@ type FinalAccountData = {
 };
 
 const UserSettings = ({ user }: { user: User }) => {
-  const { mutateUser } = useUser();
+  const { update } = useSession();
   const [nameData, setName] = useState<NameData>({
     name: user.name.split(" ")[0],
     surname: user.name.split(" ")[user.name.split(" ").length - 1] || "",
@@ -63,13 +63,15 @@ const UserSettings = ({ user }: { user: User }) => {
     name = name.trim();
 
     try {
-      mutateUser(
-        await fetchJson(`${window.location.origin}/api/users/${user.id}`, {
+      let res = await fetchJson(
+        `${window.location.origin}/api/users/${user.id}`,
+        {
           method: "PUT",
           headers: { "Content-type": "application/json" },
           body: JSON.stringify({ name }),
-        })
+        }
       );
+      update({ name });
       alert("Nome atualizado! 🙂👍");
     } catch (error) {
       if (error instanceof FetchError) {
@@ -96,13 +98,16 @@ const UserSettings = ({ user }: { user: User }) => {
     // console.log(finalAccountData);
 
     try {
-      mutateUser(
-        await fetchJson(`${window.location.origin}/api/users/${user.id}`, {
+      let res = await fetchJson(
+        `${window.location.origin}/api/users/${user.id}`,
+        {
           method: "PUT",
           headers: { "Content-type": "application/json" },
           body: JSON.stringify(finalAccountData),
-        })
+        }
       );
+      // update({ name });
+
       alert("Dados atualizados! 🙂👍");
     } catch (error) {
       if (error instanceof FetchError) {
@@ -126,7 +131,13 @@ const UserSettings = ({ user }: { user: User }) => {
                 {...data}
                 inputClassName="w-[235px]"
                 value={nameData[data.name as keyof typeof nameData]}
-                onChange={handleInputChange}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                  const { name, value } = e.target;
+                  setName((prev) => ({
+                    ...prev,
+                    [name]: value,
+                  }));
+                }}
               />
             ))}
           </div>
@@ -167,13 +178,13 @@ const UserSettings = ({ user }: { user: User }) => {
   );
 };
 
-export const getServerSideProps = withIronSessionSsr(async function ({
+export const getServerSideProps = async function ({
   req,
   res,
 }: GetServerSidePropsContext) {
-  const user = req.session.user;
+  const session = await getServerSession(req, res, authOptions);
 
-  if (user === undefined) {
+  if (!session || !session?.user) {
     res.setHeader("location", "/login");
     res.statusCode = 302;
     res.end();
@@ -184,10 +195,15 @@ export const getServerSideProps = withIronSessionSsr(async function ({
     };
   }
 
+  const baseUrl = getBaseUrl(req);
+
+  console.log("Fethcing...")
+
+  const user = await fetchJson(`${baseUrl}/api/users/${session.user.id}`);
+
   return {
-    props: { user: req.session.user },
+    props: { user: user },
   };
-},
-sessionOptions);
+};
 
 export default UserSettings;

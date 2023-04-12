@@ -19,6 +19,9 @@ export class PetShopModel {
         phone: true,
         location: true,
         petSpecies: true,
+        rating: true,
+        reviews: true,
+
       },
       take: limit,
       skip: (page - 1) * limit,

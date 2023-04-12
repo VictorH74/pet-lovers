@@ -5,11 +5,11 @@ import React, {
   useState,
 } from "react";
 import Options from "./Options";
-import { API_KEY } from "@/utils/constants";
+import { GOOGLE_MAPS_API_KEY } from "@/utils/constants";
 import { useDebounce } from "react-use";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 
-const apiKey = API_KEY;
+const apiKey = GOOGLE_MAPS_API_KEY;
 const geocodeJson = "https://maps.googleapis.com/maps/api/geocode/json";
 
 type ErrorMsg = {

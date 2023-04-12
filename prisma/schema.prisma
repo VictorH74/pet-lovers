@@ -11,24 +11,26 @@ datasource db {
 }
 
 model Pet {
-  id               Int     @id @default(autoincrement())
+  id               Int      @id @default(autoincrement())
   specie           String
   age              String
   breed            String
-  aditionalDetails String? @default("")
+  aditionalDetails String?  @default("")
   price            Float
-  PetShop          PetShop @relation(fields: [PetShopId], references: [id])
+  PetShop          PetShop  @relation(fields: [PetShopId], references: [id])
   PetShopId        String
-  createdAt   DateTime @default(now())
+  createdAt        DateTime @default(now())
 }
 
-// model Rate {
-//   id          Int   @id @default(autoincrement())
-//   ratingTotal Float
-//   amount      Int
-
-//   PetShop PetShop?
-// }
+model Review {
+  id        Int     @id @default(autoincrement())
+  rating    Float
+  comment   String?
+  petShop   PetShop @relation(fields: [petShopId], references: [id])
+  petShopId String
+  user      User    @relation(fields: [userId], references: [id])
+  userId    String
+}
 
 model PetShop {
   id          String   @id @default(uuid())
@@ -41,18 +43,19 @@ model PetShop {
   location    String
   createdAt   DateTime @default(now())
   petSpecies  String[] @default([])
-  // rating      Rate?    @relation(fields: [rateId], references: [id])
-  // rateId      Int      @unique
   animals     Pet[]
+  rating      Float    @default(0)
+  reviews     Review[]
 }
 
 model User {
   id        String   @id @default(uuid())
   name      String   @db.VarChar(100)
   email     String   @unique
-  password  String
+  password  String?
   phone     String?  @db.VarChar(11)
   location  String?
   petshop   PetShop?
   createdAt DateTime @default(now())
+  reviews   Review[]
 }

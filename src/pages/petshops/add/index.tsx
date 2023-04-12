@@ -8,11 +8,11 @@ import { useState } from "react";
 import { PetShop } from "@prisma/client";
 import { useRouter } from "next/router";
 import fetchJson from "@/lib/fetchJson";
-import useUser from "@/lib/useUser";
 import { formatLocationToString } from "@/utils/helpers";
 import AddIcon from "@mui/icons-material/Add";
 import Button from "@/components/Button";
 import LocationField from "@/components/LocationField";
+import { useSession } from "next-auth/react";
 
 interface IFormValues {
   name: string;
@@ -23,7 +23,7 @@ interface IFormValues {
 
 const PetshopRegister = () => {
   const router = useRouter();
-  const { user } = useUser({ redirectTo: "/signup" });
+  const { data: session } = useSession()
   const [specieInputValue, setSpecieInputValue] = useState("");
 
   const [location, setLocation] = useState<string | null>(null);
@@ -49,11 +49,13 @@ const PetshopRegister = () => {
   const handleSubmit = async (values: IFormValues) => {
     if (!location) return alert("Endereço obrigatório");
 
+    // const userId: string | undefined = session?.user?.id;
+
     let finalValues = {
       ...values,
       location,
       petSpecies,
-      userId: user?.id,
+      userId: session?.user.id,
     };
     // console.log(finalValues);
 
@@ -65,7 +67,7 @@ const PetshopRegister = () => {
     router.replace(`petshops/${res.id}`);
   };
 
-  if (!user) router.replace("/signup");
+  if (!session?.user) router.replace("/signup");
 
   return (
     <div>
@@ -75,7 +77,7 @@ const PetshopRegister = () => {
           <div className="bg-white h-[2px] w-16 m-auto" />
           <h2 className="text-2xl font-light">cadastro petshop</h2>
         </div>
-        <p className="font-light">Proprietário(a): {user?.name}</p>
+        <p className="font-light">Proprietário(a): {session?.user.name}</p>
         <Formik
           initialValues={{
             name: "",

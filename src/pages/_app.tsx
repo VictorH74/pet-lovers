@@ -1,23 +1,17 @@
 import Layout from "@/components/Layout";
-import fetchJson from "@/lib/fetchJson";
+import Providers from "@/components/Providers";
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
-import { SWRConfig } from "swr";
 
-export default function App({ Component, pageProps }: AppProps) {
+export default function App({
+  Component,
+  pageProps: { session, ...pageProps },
+}: AppProps) {
   return (
-    <SWRConfig
-      value={{
-        fetcher: fetchJson,
-        onError: (err) => {
-          console.error(err);
-        },
-      }}
-    >
+    <Providers session={session}>
       <Layout>
         <Component {...pageProps} />
       </Layout>
-      
-    </SWRConfig>
+    </Providers>
   );
 }

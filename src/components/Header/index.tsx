@@ -1,7 +1,6 @@
 import Link from "next/link";
 import Logo from "../Logo";
 import { navData } from "./data";
-import useUser from "@/lib/useUser";
 import Button from "@mui/material/Button";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import Grow from "@mui/material/Grow";
@@ -10,14 +9,14 @@ import Popper from "@mui/material/Popper";
 import MenuItem from "@mui/material/MenuItem";
 import MenuList from "@mui/material/MenuList";
 import { SyntheticEvent, useEffect, useRef, useState } from "react";
-import fetchJson from "@/lib/fetchJson";
 import { useRouter } from "next/router";
 import AccountIcon from "../AccountIcon";
+import { signOut, useSession } from "next-auth/react";
 
 const activeLink = "font-semibold";
 
 const Header = () => {
-  const { user, mutateUser } = useUser();
+  const { data } = useSession()
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const anchorRef = useRef<HTMLButtonElement>(null);
@@ -48,9 +47,7 @@ const Header = () => {
   }, [open]);
 
   const logout = async () => {
-    await fetchJson("/api/users/logout", { method: "POST" });
-    mutateUser(undefined, false);
-    router.replace("/login");
+    signOut({callbackUrl: "/login"})
   };
 
   return (
@@ -71,7 +68,7 @@ const Header = () => {
           ))}
         </div>
         <div>
-          {user ? (
+          {data?.user ? (
             <div>
               <Button
                 ref={anchorRef}
@@ -81,7 +78,7 @@ const Header = () => {
                 aria-haspopup="true"
                 onClick={handleToggle}
               >
-                <AccountIcon size={50} />
+                <AccountIcon size={50} image={data?.user?.image} />
               </Button>
               <Popper
                 className="z-10"

@@ -1,4 +1,4 @@
-import { UserModel } from '../models/user.model';
+import { RequiredUser, UserModel } from '../models/user.model';
 import { User } from '@prisma/client';
 
 export class UserService {
@@ -7,7 +7,7 @@ export class UserService {
     return user;
   }
 
-  public static async createUser(userData: User): Promise<User> {
+  public static async createUser(userData: RequiredUser): Promise<User> {
     const user = await UserModel.createUser(userData);
     return user;
   }

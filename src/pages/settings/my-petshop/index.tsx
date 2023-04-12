@@ -4,9 +4,7 @@ import SimpleInputField from "@/components/SimpleInputField";
 import { FormEvent, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { withIronSessionSsr } from "iron-session/next";
 import { GetServerSidePropsContext } from "next";
-import { sessionOptions } from "@/lib/session";
 import { PetShop } from "@prisma/client";
 import {
   formatLocationToObj,
@@ -15,13 +13,11 @@ import {
 } from "@/utils/helpers";
 import { useRouter } from "next/router";
 import fetchJson, { FetchError } from "@/lib/fetchJson";
-import { API_KEY } from "@/utils/constants";
 import { validateLocation } from "@/utils/validations";
 import Button from "@/components/Button";
 import LocationField from "@/components/LocationField";
-
-const apiKey = API_KEY;
-const geocodeJson = "https://maps.googleapis.com/maps/api/geocode/json";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
 
 type PetshopData = {
   name: string;
@@ -197,13 +193,13 @@ const PetShopSettings = ({ petshop }: { petshop: PetShop }) => {
   );
 };
 
-export const getServerSideProps = withIronSessionSsr(async function ({
+export const getServerSideProps = async function ({
   req,
   res,
 }: GetServerSidePropsContext) {
-  const user = req.session.user;
+  const session = await getServerSession(req, res, authOptions);
 
-  if (user === undefined) {
+  if (!session || !session?.user) {
     res.setHeader("location", "/login");
     res.statusCode = 302;
     res.end();
@@ -217,13 +213,12 @@ export const getServerSideProps = withIronSessionSsr(async function ({
   const baseUrl = getBaseUrl(req);
 
   const petshop = await fetchJson(
-    `${baseUrl}/api/petshops/my?userId=${user?.id}`
+    `${baseUrl}/api/petshops/my?userId=${session.user.id}`
   );
 
   return {
     props: { petshop },
   };
-},
-sessionOptions);
+};
 
 export default PetShopSettings;

@@ -2,9 +2,7 @@ import Button from "@/components/Button";
 import SettingsNavBar from "@/components/SettingsNavBar";
 import SimpleInputField from "@/components/SimpleInputField";
 import fetchJson, { FetchError } from "@/lib/fetchJson";
-import { sessionOptions } from "@/lib/session";
 import { User } from "@prisma/client";
-import { withIronSessionSsr } from "iron-session/next";
 import { GetServerSidePropsContext } from "next";
 import { ChangeEvent, FormEvent, useState } from "react";
 
@@ -118,7 +116,7 @@ const UserPasswordSettings = ({ user }: { user: User }) => {
   );
 };
 
-export const getServerSideProps = withIronSessionSsr(async function ({
+export const getServerSideProps = async function ({
   req,
   res,
 }: GetServerSidePropsContext) {
@@ -138,7 +136,6 @@ export const getServerSideProps = withIronSessionSsr(async function ({
   return {
     props: { user: req.session.user },
   };
-},
-sessionOptions);
+};
 
 export default UserPasswordSettings;

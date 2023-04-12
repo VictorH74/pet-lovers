@@ -3,12 +3,9 @@ import { PetShopService } from "@/services/petshop.service";
 import { validateLocation } from "@/utils/validations";
 import { PetShop } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { withIronSessionApiRoute } from "iron-session/next";
-import { sessionOptions } from "@/lib/session";
 
-export default withIronSessionApiRoute(myPetshopRoute, sessionOptions);
 
-async function myPetshopRoute(
+export default async function myPetshopRoute(
   req: NextApiRequest,
   res: NextApiResponse<
     | Partial<PetShop>

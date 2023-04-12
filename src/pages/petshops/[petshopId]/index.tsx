@@ -6,12 +6,12 @@ import { useRouter } from "next/router";
 import StarIcon from "@mui/icons-material/Star";
 import { useEffect, useMemo, useState } from "react";
 import { GoogleMap, MarkerF, useLoadScript } from "@react-google-maps/api";
-import useUser from "@/lib/useUser";
 import PetCard from "@/components/PetCard";
 import EditIcon from "@mui/icons-material/Edit";
 import NewPetForm from "@/components/NewPetForm";
 import fetchJson, { FetchError } from "@/lib/fetchJson";
 import PetFilterBar from "@/components/PetFilterBar";
+import { useSession } from "next-auth/react";
 
 interface FinalPetShop extends PetShop {
   owner: Pick<User, "id" | "name">;
@@ -21,10 +21,12 @@ interface Props {
   petshopData: FinalPetShop;
 }
 
-export default function Petshop({ petshopData: p }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function Petshop({
+  petshopData: p,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
   const libraries = useMemo(() => ["places"], []);
-  const { user } = useUser();
+  const { data: session } = useSession();
   const [showNewPetForm, setShowNewPetForm] = useState(false);
   const [deleteablePet, setDeleteablePet] = useState(false);
   const [animals, setAnimals] = useState<Pet[]>([]);
@@ -32,7 +34,7 @@ export default function Petshop({ petshopData: p }: InferGetServerSidePropsType<
 
   const location = formatLocationToObj(p.location);
 
-  const isOwner = useMemo(() => user?.id === p.owner.id, [user, p]);
+  const isOwner = useMemo(() => session?.user.id === p.owner.id, [session, p]);
 
   const mapCenter = {
     lat: location.lat as number,

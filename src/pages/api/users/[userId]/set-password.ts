@@ -3,12 +3,9 @@ import { UserService } from "@/services/user.service";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import bcrypt from "bcrypt";
-import { sessionOptions } from "@/lib/session";
-import { withIronSessionApiRoute } from "iron-session/next";
 
-export default withIronSessionApiRoute(userRoute, sessionOptions);
 
-async function userRoute(
+export default async function userRoute(
   req: NextApiRequest,
   res: NextApiResponse<
     Partial<User> | { error: string } | { message: string; status?: number }
@@ -45,9 +42,6 @@ async function userRoute(
     const updatedUser = await UserService.updateUser(userId, {
       password: hashedPass,
     });
-
-    req.session.user = updatedUser
-    req.session.save()
 
     res.status(200).send(updatedUser);
   } catch (error) {

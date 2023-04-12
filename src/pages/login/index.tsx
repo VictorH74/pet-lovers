@@ -1,7 +1,5 @@
 import { loginSchema } from "./validationSchema";
 import data from "./data.json";
-import useUser from "@/lib/useUser";
-import fetchJson, { FetchError } from "@/lib/fetchJson";
 import { useRouter } from "next/router";
 import FormLogo from "@/components/FormLogo";
 import FormBase from "@/components/FormBase";
@@ -10,6 +8,7 @@ import Line from "@/components/Line";
 import WithFormik from "@/components/WithFormik";
 import Link from "next/link";
 import { useState } from "react";
+import { signIn, useSession } from "next-auth/react";
 
 interface IFormValues {
   email: string;
@@ -17,36 +16,17 @@ interface IFormValues {
 }
 
 const Login = () => {
-  const { user, mutateUser } = useUser({
-    redirectTo: "/",
-    redirectIfFound: true,
-  });
+  const { data: session } = useSession();
   const router = useRouter();
   const [error, setError] = useState<{ message: string; status?: number }>({
     message: "",
   });
 
-  const handleSubmit = async (values: IFormValues) => {
-    try {
-      mutateUser(
-        await fetchJson("/api/users/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(values),
-        }),
-        false
-      );
-    } catch (error) {
-      if (error instanceof FetchError) {
-        console.error(error.data);
-        setError(error.data);
-      } else {
-        console.error("An unexpected error happened:", error);
-      }
-    }
+  const handleSubmit = async ({ email, password }: IFormValues) => {
+    signIn("credentials", { email, password, callbackUrl: "/" });
   };
 
-  if (user) router.replace("/");
+  if (session?.user) router.replace("/");
 
   return (
     <div className="@container">
@@ -66,7 +46,9 @@ const Login = () => {
             belowTheFields={
               <>
                 {error?.message && (
-                  <p className="text-red-500 text-right uppercase">{error.message}</p>
+                  <p className="text-red-500 text-right uppercase">
+                    {error.message}
+                  </p>
                 )}
                 <Link href="/signup">Fazer cadastro</Link>
               </>
