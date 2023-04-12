@@ -1,4 +1,18 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+![Alt text](/public/project-img.png "Project pet-lovers route screenshot")
+
+# About this project
+A personal project developed in Nextjs that allows users to search for nearby petshops or create their own petshop.
+
+# Functionalities
+- Login / Signup
+    - Email and password
+    - Google account
+- List petshops
+- Retrieve petshop
+- Address lookup system integrated with google maps
+- Manage user data
+- Manage petshop data
+
 
 # Getting Started
 
