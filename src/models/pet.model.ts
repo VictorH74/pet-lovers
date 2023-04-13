@@ -38,7 +38,10 @@ export class PetModel {
     return prisma.pet.findUnique({ where: { id } });
   }
 
-  public static updatePet(id: number, data: Partial<Pet>) {
+  public static updatePet(
+    id: number,
+    data: Omit<Partial<Pet>, "id" | "createdAt">
+  ) {
     return prisma.pet.update({ where: { id }, data });
   }
 

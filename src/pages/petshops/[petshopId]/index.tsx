@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { formatLocationToObj, getBaseUrl } from "@/utils/helpers";
 import { Pet, PetShop, User } from "@prisma/client";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import StarIcon from "@mui/icons-material/Star";
 import { useEffect, useMemo, useState } from "react";
@@ -12,6 +12,7 @@ import NewPetForm from "@/components/NewPetForm";
 import fetchJson, { FetchError } from "@/lib/fetchJson";
 import PetFilterBar from "@/components/PetFilterBar";
 import { useSession } from "next-auth/react";
+import Rating from "@mui/material/Rating";
 
 interface FinalPetShop extends PetShop {
   owner: Pick<User, "id" | "name">;
@@ -21,9 +22,7 @@ interface Props {
   petshopData: FinalPetShop;
 }
 
-export default function Petshop({
-  petshopData: p,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function Petshop({ petshopData: p }: Props) {
   const router = useRouter();
   const libraries = useMemo(() => ["places"], []);
   const { data: session } = useSession();
@@ -31,6 +30,9 @@ export default function Petshop({
   const [deleteablePet, setDeleteablePet] = useState(false);
   const [animals, setAnimals] = useState<Pet[]>([]);
   const [editPets, setEditPets] = useState(false);
+  const [disabledRating, setDisabledRating] = useState(false);
+  const [rating, setRating] = useState(p.rating);
+  const [ratingCount, setCount] = useState(p.count);
 
   const location = formatLocationToObj(p.location);
 
@@ -113,6 +115,36 @@ export default function Petshop({
     }
   };
 
+  const rate = async (_: React.SyntheticEvent, rating: number | null) => {
+    if (!rating) return alert("Erro ao classificar petshop. Tente novamente");
+
+    setDisabledRating(true);
+
+    try {
+      const res: PetShop = await fetchJson(
+        `${window.location.origin}/api/reviews/add`,
+        {
+          method: "POST",
+          headers: { "Content-type": "application/json" },
+          body: JSON.stringify({
+            petShopId: p.id,
+            userId: session?.user.id,
+            rating,
+          }),
+        }
+      );
+
+      setRating(res.rating)
+      setCount(res.count)
+      setDisabledRating(false);
+      alert("Classificado com sucesso! 👍");
+    } catch (error) {
+      if (error instanceof FetchError) {
+        console.error(error);
+      }
+    }
+  };
+
   const closeNewPetForm = () => setShowNewPetForm(false);
 
   if (router.isFallback || !isLoaded) {
@@ -131,7 +163,7 @@ export default function Petshop({
             </>
           )}
         </div>
-        <div className="border-2 rounded-md border-custom-blue flex flex-wrap-reverse @container">
+        <div className="border-2 rounded-md border-custom-blue flex flex-wrap-reverse @container overflow-hidden">
           <div className="aspect-video @[860px]:w-[650px] w-[650px] flex-auto">
             <GoogleMap
               options={mapOptions}
@@ -148,22 +180,32 @@ export default function Petshop({
             </GoogleMap>
           </div>
 
-          <div className="p-4 flex-[1_1_200px] @[860px]:text-left text-center">
-            <p className="text-stone-600 pl-2">{location.address}</p>
-            <div className="relative w-fit @[860px]:m-0 m-auto">
-              <StarIcon sx={{ color: "#ffbb00", fontSize: 80 }} />
-              <p className="absolute text-lg text-white font-bold top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                4.7
-              </p>
+          <div className="text-stone-600 p-4 flex-[1_1_200px] @[860px]:text-left text-center">
+            <p className="pl-2">{location.address}</p>
+            <div className="w-fit grid place-items-center @[860px]:m-0 m-auto">
+              <div className="relative">
+                <StarIcon className="text-custom-blue" sx={{ fontSize: 80 }} />
+                <p className="absolute text-lg text-white font-bold top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                  {rating.toFixed(1)}
+                </p>
+              </div>
+              {ratingCount > 0 && <p>({ratingCount})</p>}
+              <Rating
+                className="mt-2"
+                name="half-rating"
+                defaultValue={2.5}
+                precision={0.5}
+                onChange={rate}
+                disabled={disabledRating || isOwner}
+              />
             </div>
           </div>
         </div>
-        <div className="text-center">
+        <div className="text-center @container">
           <div className="w-fit m-auto flex gap-2 items-center">
             <h2 className="text-3xl text-custom-gray leading-12">Animais</h2>
-
             {isOwner && (
-              <div className="relative">
+              <div className="@[500px]:relative">
                 <button
                   onClick={() => setEditPets((prev) => !prev)}
                   className="border-2 border-custom-blue rounded-full p-1"
@@ -171,7 +213,21 @@ export default function Petshop({
                   <EditIcon className="text-custom-blue" />
                 </button>
                 <div
-                  className={`bg-[#ffffff71f] border-[1px] border-custom-emerald absolute left-full top-full z-20 p-3 backdrop-blur rounded-[0_15px_15px_15px] text-left font-semibold ${
+                  className={`bg-[#ffffff71f]
+                  -bottom-5
+                  left-5 
+                  right-5
+                  rounded-xl
+                  grid
+                  place-items-center
+                  
+                  @[500px]:block
+                  @[500px]:bottom-auto
+                  @[500px]:right-auto
+                  @[500px]:left-full
+                  @[500px]:top-full
+                  @[500px]:rounded-[0_15px_15px_15px]
+                  border-[1px] border-custom-emerald absolute z-20 p-3 backdrop-blur text-left font-semibold ${
                     editPets
                       ? "opacity-1"
                       : "opacity-0 scale-90 pointer-events-none"

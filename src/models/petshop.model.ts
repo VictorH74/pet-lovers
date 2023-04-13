@@ -20,8 +20,7 @@ export class PetShopModel {
         location: true,
         petSpecies: true,
         rating: true,
-        reviews: true,
-
+        count: true,
       },
       take: limit,
       skip: (page - 1) * limit,
@@ -51,10 +50,13 @@ export class PetShopModel {
       location: true,
       createdAt: true,
       petSpecies: true,
+      rating: true,
+      count: true,
     };
 
     return prisma.petShop.findUnique({ where: { id }, select });
   }
+
   public static retrievePetshopByUserId(userId: string) {
     const select = {
       id: true,
@@ -76,7 +78,10 @@ export class PetShopModel {
     return prisma.petShop.findUnique({ where: { userId }, select });
   }
 
-  public static updatePetshop(id: string, data: Partial<PetShop>) {
+  public static updatePetshop(
+    id: string,
+    data: Omit<Partial<PetShop>, "id" | "createdAt">
+  ) {
     return prisma.petShop.update({ where: { id }, data });
   }
 

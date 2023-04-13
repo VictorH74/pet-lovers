@@ -85,7 +85,7 @@ const LocationField: React.FC<Props> = (props) => {
       })}
 
       {selectedAddress ? (
-        <span className="flex items-center text-xs mt-0 text-left text-white w-fit p-[4px] rounded-md bg-custom-blue font-semibold">
+        <span className="flex items-center text-xs mt-0 text-left text-white w-fit p-[4px] rounded-md bg-custom-blue font-semibold ">
           <LocationOnIcon />
           &nbsp;{selectedAddress}
         </span>

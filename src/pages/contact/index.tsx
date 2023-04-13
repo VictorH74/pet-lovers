@@ -1,7 +1,7 @@
 const Contact = () => {
     return (
-        <div>
-            <h1>Contact page</h1>
+        <div className="grid place-items-center h-[80vh] text-lg text-custom-gray">
+            <h1>Página de contatos</h1>
         </div>
     )
 }

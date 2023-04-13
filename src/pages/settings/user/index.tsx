@@ -10,7 +10,7 @@ import Button from "@/components/Button";
 import fetchJson, { FetchError } from "@/lib/fetchJson";
 import LocationField from "@/components/LocationField";
 import { formatLocationToString } from "@/utils/helpers";
-import AccountIcon from "@/components/AccountIcon";
+import AccountIcon from "@/components/Header/components/AccountIcon";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { useSession } from "next-auth/react";
@@ -116,18 +116,30 @@ const UserSettings = ({ user }: { user: User }) => {
   return (
     <SettingsNavBar>
       <form className="grid place-items-center" onSubmit={saveName}>
-        <div className="flex gap-3 items-center">
+        <div className="grid place-items-center  @[350px]:flex gap-3 items-center">
           <AccountIcon
             size={100}
             className="mr-2"
             image={session?.user?.image}
           />
-          <div className="border-l-2 pl-5 grid gap-4">
+          <div
+            className="
+              border-t-2
+              pt-3
+              mt-2
+              @[350px]:pt-0
+              @[350px]:mt-0
+              @[350px]:border-t-0
+              @[350px]:border-l-2 
+              @[350px]:pl-5 
+              grid 
+              gap-4"
+          >
             {namefieldsData.map((data) => (
               <SimpleInputField
                 key={data.name}
                 {...data}
-                inputClassName="w-[235px]"
+                inputClassName="w-full @[350px]:max-w-[235px]"
                 value={nameData[data.name as keyof typeof nameData]}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => {
                   const { name, value } = e.target;
@@ -140,7 +152,7 @@ const UserSettings = ({ user }: { user: User }) => {
             ))}
           </div>
         </div>
-        <Button className="mt-4 w-64">Salvar</Button>
+        <Button className="mt-4 w-full @[500px]:max-w-[250px]">Salvar</Button>
       </form>
 
       <div className="bg-white h-1 w-full rounded-xl" />
@@ -170,7 +182,7 @@ const UserSettings = ({ user }: { user: User }) => {
           }
           value={accountData.address}
         />
-        <Button className="w-64 m-auto">Salvar</Button>
+        <Button className="m-auto w-full @[500px]:max-w-[250px]">Salvar</Button>
       </form>
     </SettingsNavBar>
   );

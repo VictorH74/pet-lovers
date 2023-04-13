@@ -176,7 +176,7 @@ const PetShopSettings = ({ petshop }: { petshop: PetShop }) => {
               </div>
             )}
           </div>
-          <Button className="w-64 m-auto">Salvar</Button>
+          <Button className="w-full @[500px]:max-w-[250px] m-auto">Salvar</Button>
         </form>
       ) : (
         <div className="text-white uppercase grid place-items-center gap-4">

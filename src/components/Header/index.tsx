@@ -10,13 +10,15 @@ import MenuItem from "@mui/material/MenuItem";
 import MenuList from "@mui/material/MenuList";
 import { SyntheticEvent, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
-import AccountIcon from "../AccountIcon";
+import AccountIcon from "./components/AccountIcon";
 import { signOut, useSession } from "next-auth/react";
+import AccountMenu from "./components/AccountMenu";
+import MenuDrawer from "./components/Drawer";
 
-const activeLink = "font-semibold";
+export const activeLink = "font-semibold";
 
 const Header = () => {
-  const { data } = useSession()
+  const { data } = useSession();
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const anchorRef = useRef<HTMLButtonElement>(null);
@@ -47,14 +49,14 @@ const Header = () => {
   }, [open]);
 
   const logout = async () => {
-    signOut({callbackUrl: "/login"})
+    signOut({ callbackUrl: "/login" });
   };
 
   return (
-    <header className="h-20 bg-custom-emerald grid place-items-center px-[20px]">
+    <header className="h-20 bg-custom-emerald grid place-items-center px-[20px] @container">
       <div className="flex flex-wrap place-content-between w-[100%] min-width">
         <Logo />
-        <div className="flex gap-x-10 items-center">
+        <div className="hidden @[800px]:flex gap-x-10 items-center">
           {navData.map((data) => (
             <Link
               className={router.pathname === data.path ? activeLink : ""}
@@ -67,55 +69,9 @@ const Header = () => {
             </Link>
           ))}
         </div>
-        <div>
+        <div className="hidden @[800px]:block">
           {data?.user ? (
-            <div>
-              <Button
-                ref={anchorRef}
-                id="composition-button"
-                aria-controls={open ? "composition-menu" : undefined}
-                aria-expanded={open ? "true" : undefined}
-                aria-haspopup="true"
-                onClick={handleToggle}
-              >
-                <AccountIcon size={50} image={data?.user?.image} />
-              </Button>
-              <Popper
-                className="z-10"
-                open={open}
-                anchorEl={anchorRef.current}
-                role={undefined}
-                placement="bottom-start"
-                transition
-                disablePortal
-              >
-                {({ TransitionProps, placement }) => (
-                  <Grow
-                    {...TransitionProps}
-                    style={{
-                      transformOrigin:
-                        placement === "bottom-start"
-                          ? "left top"
-                          : "left bottom",
-                    }}
-                  >
-                    <Paper>
-                      <ClickAwayListener onClickAway={handleClose}>
-                        <MenuList
-                          autoFocus={open}
-                          aria-labelledby="composition-button"
-                        >
-                          <MenuItem onClick={handleClose}>
-                            <Link href="/settings/user">Minha conta</Link>
-                          </MenuItem>
-                          <MenuItem onClick={logout}>Sair</MenuItem>
-                        </MenuList>
-                      </ClickAwayListener>
-                    </Paper>
-                  </Grow>
-                )}
-              </Popper>
-            </div>
+            <AccountMenu />
           ) : (
             <Link
               className="bg-custom-blue px-7 py-2 rounded-md text-slate-50 uppercase"
@@ -125,6 +81,10 @@ const Header = () => {
             </Link>
           )}
         </div>
+        <div className="block @[800px]:hidden">
+          <MenuDrawer />
+        </div>
+        
       </div>
     </header>
   );

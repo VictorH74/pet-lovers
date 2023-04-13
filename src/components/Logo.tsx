@@ -1,5 +1,5 @@
-const Logo = ({ color }: { color?: string }) => (
-  <div className="grid place-content-center">
+const Logo = ({ color, className }: { color?: string, className?: string }) => (
+  <div className={"grid place-content-center" + " " + className} >
     <h1
       className={`font-righteous text-2xl text-${color || "slate-50"}`}
     >

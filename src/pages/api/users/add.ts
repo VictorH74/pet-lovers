@@ -3,6 +3,8 @@ import { UserService } from "@/services/user.service";
 import { validateLocation } from "@/utils/validations";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
+import bcrypt from "bcrypt";
+
 
 export default async function handler(
   req: NextApiRequest,
@@ -25,7 +27,12 @@ export default async function handler(
         .send({ message: "Formato de localização inválido", status: 400 });
     }
 
-    await UserService.createUser(userData);
+    let hashedPassword = null;
+
+    if (userData.password)
+      hashedPassword = await bcrypt.hash(userData.password, 10);
+
+    await UserService.createUser({...userData, password: hashedPassword});
 
     res.status(201).send({ message: "User created!", status: 201 });
   } catch (error) {
