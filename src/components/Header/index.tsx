@@ -48,10 +48,6 @@ const Header = () => {
     prevOpen.current = open;
   }, [open]);
 
-  const logout = async () => {
-    signOut({ callbackUrl: "/login" });
-  };
-
   return (
     <header className="h-20 bg-custom-emerald grid place-items-center px-[20px] @container">
       <div className="flex flex-wrap place-content-between w-[100%] min-width">

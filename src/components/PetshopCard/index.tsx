@@ -24,11 +24,13 @@ const PetshopCard = (props: PetShop) => {
             </p>
           </div>
           <p className="font-noto-sans text-xs text-zinc-600 font-semibold">
-            <PhoneIcon /> {formatPhone(props.phone)}
+            <PhoneIcon /> {props.phone}
+            {/* <PhoneIcon /> {formatPhone(props.phone)} */}
           </p>
           <div className="text-stone-600 flex items-center justify-center gap-1">
             <StarIcon sx={{ color: "#368FC1" }} />
-            <p> {props.rating.toFixed(1)} </p>
+            <p> {props.rating} </p>
+            {/* <p> {props.rating.toFixed(1)} </p> */}
             {props.count > 0 && <span>({props.count})</span>}
           </div>
         </div>
