@@ -63,6 +63,18 @@ export default function Petshop({ petshopData: p }: Props) {
   }, []);
 
   useEffect(() => {
+    const call = async () => {
+      if (router.query.call && router.query.value) {
+        let { call, value } = router.query;
+        if (call === "rate") {
+          rate(null, Number(value));
+        }
+      }
+    };
+    call();
+  }, [router]);
+
+  useEffect(() => {
     if (animals.length === 0 && deleteablePet) setDeleteablePet(false);
   }, [animals, deleteablePet]);
 
@@ -115,8 +127,17 @@ export default function Petshop({ petshopData: p }: Props) {
     }
   };
 
-  const rate = async (_: React.SyntheticEvent, rating: number | null) => {
+  const rate = async (
+    _: React.SyntheticEvent | null,
+    rating: number | null
+  ) => {
+    if (isOwner) return;
     if (!rating) return alert("Erro ao classificar petshop. Tente novamente");
+    if (!session?.user) {
+      return router.replace(
+        `/login?from=${router.asPath}&call=rate&value=${rating}`
+      );
+    }
 
     setDisabledRating(true);
 
@@ -134,8 +155,8 @@ export default function Petshop({ petshopData: p }: Props) {
         }
       );
 
-      setRating(res.rating)
-      setCount(res.count)
+      setRating(res.rating);
+      setCount(res.count);
       setDisabledRating(false);
       alert("Classificado com sucesso! 👍");
     } catch (error) {

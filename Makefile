@@ -25,6 +25,12 @@ seed:
 	docker cp initial_data postgres:/initial_data/
 	docker exec -it postgres bash -c "psql -U postgres -d PetLovers -f /initial_data/data.sql;"
 
+rm_petshop_csv:
+	docker exec -it postgres bash -c "rm -r /initial_data/petshop.csv"
+
+add_petshop_csv:
+	docker cp initial_data/petshop.csv postgres:/initial_data/petshop.csv
+
 rm_data:
 	docker exec -it postgres bash -c "rm -r /initial_data"
 
@@ -46,8 +52,15 @@ remove_all_data:
 	make remove_petshops
 	make remove_pets
 
+reset_petshop_csv:
+	make rm_petshop_csv
+	make add_petshop_csv
+
 migrate:
 	npx prisma migrate dev --name migrations
 
 prisma_studio:
 	npx prisma studio
+
+db_run:
+	docker exec -it postgres psql -U postgres -d PetLovers -c '$(command)'

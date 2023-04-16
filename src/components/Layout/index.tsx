@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import Footer from "../Footer";
 import Header from "../Header";
-import NewPetForm from "../NewPetForm";
 
 const excludeHeader = [
     "/login",

@@ -14,7 +14,7 @@ const PetshopCard = (props: PetShop) => {
         <h2 className="font-noto-sans text-2xl text-custom-emerald font-semibold">
           {props.name}
         </h2>
-        <h3 className="text-xl text-stone-600">
+        <h3 className="text-xl text-stone-600 leading-6">
           {props.description || "Sem descrição"}
         </h3>
         <div className="grid gap-2">
@@ -24,8 +24,7 @@ const PetshopCard = (props: PetShop) => {
             </p>
           </div>
           <p className="font-noto-sans text-xs text-zinc-600 font-semibold">
-            <PhoneIcon /> {props.phone}
-            {/* <PhoneIcon /> {formatPhone(props.phone)} */}
+            <PhoneIcon /> {formatPhone(props.phone)}
           </p>
           <div className="text-stone-600 flex items-center justify-center gap-1">
             <StarIcon sx={{ color: "#368FC1" }} />

@@ -17,7 +17,7 @@ type ErrorMsg = {
 };
 
 interface Props {
-  inputElement: ReactElement;
+  inputElement?: ReactElement;
   required?: boolean;
   value?: string;
   itemHandleClick: (item: any) => void;
@@ -72,17 +72,24 @@ const LocationField: React.FC<Props> = (props) => {
       alert("Geocode was not successful for the following reason: " + e);
     }
   };
+
+  const inputProps = {
+    name: "location",
+    value: locationInputValue,
+    onChange: (e: ChangeEvent<HTMLInputElement>) => {
+      let { value } = e.target;
+      setLocationInputValue(value);
+    },
+    onBlur: () => hundlerBlur(),
+  };
+
   return (
     <>
-      {cloneElement(props.inputElement, {
-        name: "location",
-        value: locationInputValue,
-        onChange: (e: ChangeEvent<HTMLInputElement>) => {
-          let { value } = e.target;
-          setLocationInputValue(value);
-        },
-        onBlur: () => hundlerBlur()
-      })}
+      {props.inputElement ? (
+        cloneElement(props.inputElement, inputProps)
+      ) : (
+        <input className="border-2 border-custom-blue rounded-xl w-full p-2" {...inputProps} />
+      )}
 
       {selectedAddress ? (
         <span className="flex items-center text-xs mt-0 text-left text-white w-fit p-[4px] rounded-md bg-custom-blue font-semibold ">

@@ -37,7 +37,7 @@ model Review {
 model PetShop {
   id          String   @id @default(uuid())
   name        String   @db.VarChar(50)
-  description String?  @db.VarChar(70)
+  description String?  @db.VarChar(90)
   owner       User     @relation(fields: [userId], references: [id])
   userId      String   @unique
   website     String?  @db.VarChar(50)

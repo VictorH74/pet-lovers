@@ -7,7 +7,7 @@ import GoogleBtn from "@/components/GoogleBtn";
 import Line from "@/components/Line";
 import WithFormik from "@/components/WithFormik";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
 import ErrorMsg from "@/components/ErrorMsg";
 
@@ -42,7 +42,20 @@ const Login = () => {
     message: "",
   });
 
+  const from = useMemo(() => {
+    let {from, call, value} = router.query
+
+    if (!from) return null
+
+    let str = from as string
+    if (call) str += "?call=" + call
+    if (value) str += "&value=" + value
+
+    return str
+  }, [router])
+
   useEffect(() => {
+    console.log(router)
     if (router.query.error) {
       let msg = String(router.query.error) as ErrorsStr;
       setError({ message: getErrorMsg(msg) });
@@ -53,7 +66,7 @@ const Login = () => {
     signIn("credentials", { email, password, callbackUrl: "/" });
   };
 
-  if (session?.user) router.replace("/");
+  if (session?.user) router.replace(from || "/");
 
   return (
     <div className="@container">

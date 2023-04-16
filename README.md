@@ -40,6 +40,9 @@ make migrate
 ```
 make seed
 ```
+*After run the above command, you can login in any user created from initial_data entering the user email with the password: **password123***
+<br />
+*Run ```npx prisma studio``` in the root folder to see all users*
 
 4. Run app
 ```

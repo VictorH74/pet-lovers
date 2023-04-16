@@ -1,40 +1,30 @@
-id,name,"userId",phone,location
-0d9ec9f2-3746-4ae4-a550-758ede61ba44,Petshop de Jessica,31effb99-c8ab-46e6-8a15-c2ff2706b76c,23969659927,"-23.243013446716624__-48.07741499361775__Quadra Quadra 1 Chácara 3
+id,name,description,"userId",phone,location
+0d9ec9f2-3746-4ae4-a550-758ede61ba44,Petshop da Jessica,"Encontre o pet perfeito para você!",31effb99-c8ab-46e6-8a15-c2ff2706b76c,23969659927,"-23.243013446716624__-48.07741499361775__Quadra Quadra 1 Chácara 3
 DPO AE 42336"
-4873e7ea-01e7-40b8-8b68-ffbc6656fbfc,Petshop de Connie,4678609f-cfd3-410f-ada9-e5af7152fe03,35521545179,"-9.365427874612118__-40.48046027597068__Rua João Câncio dos Santos"
-efe4fda9-eb73-4208-bff0-d4987645c631,Petshop de Mr.,0ae5b255-5c76-45bf-a151-1d6b0c11fac9,42227627984,"-9.371971320089175__-40.49555185470857__Vila Brilhante
+4873e7ea-01e7-40b8-8b68-ffbc6656fbfc,Petshop do Connie,"Descubra o seu novo parceiro peludo com a nossa ajuda!",4678609f-cfd3-410f-ada9-e5af7152fe03,35521545179,"-9.365427874612118__-40.48046027597068__Rua João Câncio dos Santos"
+efe4fda9-eb73-4208-bff0-d4987645c631,Petshop Master,"Somos apaixonados por pets e queremos ajudá-lo a encontrar o seu ideal",0ae5b255-5c76-45bf-a151-1d6b0c11fac9,42227627984,"-9.371971320089175__-40.49555185470857__Vila Brilhante
 Damas"
-0548c295-ea09-49e9-ac29-b373952a2a39,Petshop de Linda,917f9a1d-fdf3-4300-b599-9fe2f1443611,44949271528,"63.434654__86.917209__112 Dixon Spring
-Jamieland, SC 16941"
-1845f8be-5240-43a1-a528-f9b5b5c8ea60,Petshop de Janice,3d3160f9-0c28-453e-817c-613afed53752,27088451926,"57.2161665__86.875648__88896 Alex Via Suite 801
-West Kimberly, MD 14884"
-d5af8dbf-2987-4cad-aab4-df10806613a6,Petshop de Alex,485cff1d-f994-455e-92d2-9e604305051c,32315932309,"23.008328__-85.413397__PSC 4559, Box 6977
+0548c295-ea09-49e9-ac29-b373952a2a39,Petshop da Linda,,917f9a1d-fdf3-4300-b599-9fe2f1443611,44949271528,"-10.9649511__-37.0845336__R. Sandro Rezende - São Conrado, Aracaju - SE, 49042-530, Brasil"
+1845f8be-5240-43a1-a528-f9b5b5c8ea60,Petshop da Janice,"O seu pet ideal está aqui - encontre-o hoje mesmo!",3d3160f9-0c28-453e-817c-613afed53752,27088451926,"-7.1662278__-34.9074148__R. Martinho Lutero, 909 - Jardim Veneza, João Pessoa - PB, 58084-000, Brasil"
+d5af8dbf-2987-4cad-aab4-df10806613a6,Petshop do Alex,"Venha nos visitar e encontre o seu novo melhor amigo!",485cff1d-f994-455e-92d2-9e604305051c,32315932309,"23.008328__-85.413397__PSC 4559, Box 6977
 APO AE 24139"
-115bbbf5-44f7-4281-91df-3c3c5e5b7b91,Petshop de Danielle,7d3d28d5-9078-4e59-b7fc-64adeab69735,18713807383,"70.5525555__166.413057__95389 Rebecca Trafficway Apt. 757
-Stephanietown, WA 93220"
-8ef49bda-1e80-4e00-a6eb-7366db213e70,Petshop de Thomas,4403b1ce-90e5-4817-abaa-09e9537af5f9,48922687181,"-4.125493__101.752870__USS Barrett
-FPO AA 02348"
-8e053c34-1ae9-4182-ac15-5010a1c19120,Petshop de Jesse,9dc233a4-767c-4470-99db-e28773dd183b,31352952293,"-6.5685495__-36.703585__1980 Foster Plains Suite 255
+115bbbf5-44f7-4281-91df-3c3c5e5b7b91,Petshop da Danielle,"Descubra a sua nova paixão animal conosco!",7d3d28d5-9078-4e59-b7fc-64adeab69735,18713807383,"-23.3088813__-46.7310163__R. Carlos Magno, 120 - Jardim dos Reis, Franco da Rocha - SP, 07845-060, Brasil"
+8ef49bda-1e80-4e00-a6eb-7366db213e70,Petshop do Thomas,,4403b1ce-90e5-4817-abaa-09e9537af5f9,48922687181,"-16.0512196__-47.9754279__Q. E - Granja do Torto, Valparaíso de Goiás - GO, Brasil"
+8e053c34-1ae9-4182-ac15-5010a1c19120,Petshop da Jesse,"Nós ajudamos você a encontrar o pet dos seus sonhos!",9dc233a4-767c-4470-99db-e28773dd183b,31352952293,"-6.5685495__-36.703585__1980 Foster Plains Suite 255
 Lake Hannah, IN 15889"
-13d1e732-aff0-4255-bed6-73ec1730f7fa,Petshop de Edward,e30f493e-8e89-4719-9418-a4e9f4c7b650,34640706746,"-66.832457__89.409279__925 Bryant Highway
-Harrellfort, OK 72039"
-b22d37fd-fb54-46d7-bc92-4df2b5e5382a,Petshop de Travis,f61c4517-1391-48b0-9b86-39f9a8a05411,89746339325,"-48.1093495__136.700330__USNV Ortiz
+13d1e732-aff0-4255-bed6-73ec1730f7fa,Petshop do Edward,,e30f493e-8e89-4719-9418-a4e9f4c7b650,34640706746,"-23.6713287__-46.5380777__R. Carlos Magno, 120 - Vila Gilda, Santo André - SP, 09190-420, Brasil"
+b22d37fd-fb54-46d7-bc92-4df2b5e5382a,Petshop do Travis,"Temos uma variedade de pets para você escolher - venha conferir",f61c4517-1391-48b0-9b86-39f9a8a05411,89746339325,"-48.1093495__136.700330__USNV Ortiz
 FPO AE 72761"
-b06448ba-6ef5-4d82-9593-d9909989e124,Petshop de Glen,90d555da-e79f-471c-987f-c006c27de6b4,78824947145,"-13.2511015__23.089923__5361 Bradley Extension Apt. 094
+b06448ba-6ef5-4d82-9593-d9909989e124,Petshop do Glen,"Encontre a alegria de ter um pet em sua vida com a nossa ajuda!",90d555da-e79f-471c-987f-c006c27de6b4,78824947145,"-13.2511015__23.089923__5361 Bradley Extension Apt. 094
 Lanemouth, IN 11290"
-7828d70a-1c88-4cae-8ee4-b529d8106cc7,Petshop de Meghan,307fa90a-cc8b-4aec-8bcf-b1fb1c44e428,95974438228,"-23.9392445__96.032081__843 Adam Lodge Suite 044
+7828d70a-1c88-4cae-8ee4-b529d8106cc7,Petshop da Meghan,,307fa90a-cc8b-4aec-8bcf-b1fb1c44e428,95974438228,"-23.9392445__96.032081__843 Adam Lodge Suite 044
 Tranberg, NM 36884"
-3ad2ed61-e319-4051-9f86-72ab0d18cded,Petshop de Megan,7ece858e-50f0-4dd6-8a8b-127f5c3ad952,35960302245,"-22.1716205__89.456399__859 Kimberly Squares Suite 365
-Cookbury, MI 50311"
-cd1e55dd-7e90-4d08-900a-0401a440734b,Petshop de Mary,f0c999db-f482-47bd-91bf-e59512b3c0a0,64825611116,"-14.1671325__18.749112__01883 Richard Station Apt. 492
+3ad2ed61-e319-4051-9f86-72ab0d18cded,Petshop da Megan,,7ece858e-50f0-4dd6-8a8b-127f5c3ad952,35960302245,"-5.8863013__-35.2502463__R. Rio Nilo, 127 - Emaús, Parnamirim - RN, 59149-090, Brasil"
+cd1e55dd-7e90-4d08-900a-0401a440734b,Petshop da Mary,"Descubra o seu novo parceiro peludo com a nossa ajuda",f0c999db-f482-47bd-91bf-e59512b3c0a0,64825611116,"-14.1671325__18.749112__01883 Richard Station Apt. 492
 East Craig, MI 60763"
-d6f6e286-5b2e-4e92-8cd6-2d7787172d9a,Petshop de Jessica,8a1df195-efa0-434e-beb6-31f8e84147a3,63422360839,"-31.1126235__97.633151__832 Hayes Meadows Apt. 815
-West Matthewstad, KS 46957"
-7515d4ba-6c34-4456-986f-4b84e36d2f3d,Petshop de Ashley,3cd87f32-e817-4012-a0c3-18a439ca1b12,72841978846,"-72.825339__-44.353817__734 Yvette Heights
-East Kevin, GA 39360"
-d5547677-9ec5-4277-818c-b1ca3fd6725d,Petshop de Patricia,4b071be8-9ad6-4623-a271-79e6f31b3320,19340323994,"-21.7389015__-150.505404__300 Macias Plaza
+d6f6e286-5b2e-4e92-8cd6-2d7787172d9a,Petshop da Jessica,,8a1df195-efa0-434e-beb6-31f8e84147a3,63422360839,"-27.6042955__-48.5167104__R. João Câncio dos Santos, 11 - Pantanal, Florianópolis - SC, 88040-300, Brasil"
+7515d4ba-6c34-4456-986f-4b84e36d2f3d,Petshop da Ashley,Os melhores amigos merecem os melhores cuidados - venha conhecer nossos pets!,3cd87f32-e817-4012-a0c3-18a439ca1b12,72841978846,"-20.7047557__-46.599751__R. Rio Sapucaí, 1001 - Jardim Santa Luzia, Passos - MG, 37900-556, Brasil"
+d5547677-9ec5-4277-818c-b1ca3fd6725d,Petshop da Patricia,Venha ver os nossos adoráveis pets e encontre o seu novo companheiro de aventuras!,4b071be8-9ad6-4623-a271-79e6f31b3320,19340323994,"-21.7389015__-150.505404__300 Macias Plaza
 Port Theresa, RI 26082"
-39aeb7e5-81d4-453c-ae74-99e8d5903999,Petshop de Colin,ee10a99e-3f07-4f98-a9a4-cbc1d4f82cbf,71838101799,"85.068749__-30.629059__1626 Paul Fort
-Hannahbury, OK 46855"
-5e596e3e-02f4-4f1c-9c21-12871d9e453d,Petshop de James,571a0f1d-66f1-4c72-a12a-50eec236d6f2,15664629140,"49.5091425__37.411396__USCGC Lozano
-FPO AP 75649"
+39aeb7e5-81d4-453c-ae74-99e8d5903999,Petshop do Colin,,ee10a99e-3f07-4f98-a9a4-cbc1d4f82cbf,71838101799,"-7.1683618__-34.9101973__Tv. Martinho Lutero, 400 - Jardim Veneza, João Pessoa - PB, 58084-415, Brasil"
+5e596e3e-02f4-4f1c-9c21-12871d9e453d,Petshop do James,"Oferecemos uma ampla seleção de pets para você escolher o seu preferido!",571a0f1d-66f1-4c72-a12a-50eec236d6f2,15664629140,"-19.471113__-44.226035__R. Rio Sapucaí, 248 - Progresso, Sete Lagoas - MG, 35701-123, Brasil"
