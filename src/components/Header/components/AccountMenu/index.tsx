@@ -58,7 +58,6 @@ const AccountMenu = () => {
         <AccountIcon size={50} image={data?.user?.image} />
       </Button>
       <Popper
-        className="z-10"
         open={open}
         anchorEl={anchorRef.current}
         role={undefined}
@@ -76,9 +75,14 @@ const AccountMenu = () => {
           >
             <Paper>
               <ClickAwayListener onClickAway={handleClose}>
-                <MenuList autoFocus={open} aria-labelledby="composition-button">
+                <MenuList
+                  autoFocus={open}
+                  aria-labelledby="composition-button"
+                >
                   <MenuItem onClick={handleClose}>
-                    <Link href="/settings/user">Minha conta</Link>
+                    <Link  href="/settings/user">
+                      Minha conta
+                    </Link>
                   </MenuItem>
                   <MenuItem onClick={logout}>Sair</MenuItem>
                 </MenuList>

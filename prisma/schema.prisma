@@ -12,6 +12,7 @@ datasource db {
 
 model Pet {
   id               Int      @id @default(autoincrement())
+  image            Bytes?
   specie           String
   age              String
   breed            String

@@ -1,6 +1,6 @@
-import SettingsNavBar from "@/components/SettingsNavBar";
+import SettingsSideBar from "@/components/SettingsSideBar";
 import { User } from "@prisma/client";
-import { GetServerSidePropsContext } from "next";
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import namefieldsData from "./namefieldsData.json";
 import accountFieldsData from "./accountFieldsData.json";
 import React, { ChangeEvent, FormEvent, useCallback, useState } from "react";
@@ -29,7 +29,7 @@ type FinalAccountData = {
   location?: string;
 };
 
-const UserSettings = ({ user }: { user: User }) => {
+const UserSettings = ({ user }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { data: session, update } = useSession();
   const [nameData, setName] = useState<NameData>({
     name: user.name.split(" ")[0],
@@ -114,7 +114,7 @@ const UserSettings = ({ user }: { user: User }) => {
   };
 
   return (
-    <SettingsNavBar>
+    <SettingsSideBar>
       <form className="grid place-items-center" onSubmit={saveName}>
         <div className="grid place-items-center  @[350px]:flex gap-3 items-center">
           <AccountIcon
@@ -184,7 +184,7 @@ const UserSettings = ({ user }: { user: User }) => {
         />
         <Button className="m-auto w-full @[500px]:max-w-[250px]">Salvar</Button>
       </form>
-    </SettingsNavBar>
+    </SettingsSideBar>
   );
 };
 

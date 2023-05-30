@@ -10,12 +10,12 @@ interface Props {
 
 const activeLink = "border-b-2";
 
-const SettingsNavBar: React.FC<Props> = ({ children }) => {
+const SettingsSideBar: React.FC<Props> = ({ children }) => {
   const router = useRouter();
   const [showNavBar, setShowNavBar] = useState(false);
 
   return (
-    <div className="flex flex-row gap-2 min-h-[89vh] p-2 justify-center min-width m-auto relative @container">
+    <div className="flex flex-row gap-2 min-h-[89vh] p-2 justify-center min-width m-auto relative @container z-0">
       <div
         className={`
           absolute
@@ -59,11 +59,11 @@ const SettingsNavBar: React.FC<Props> = ({ children }) => {
           </ul>
         </nav>
       </div>
-      <div className="bg-custom-emerald h-fit rounded-xl w-full  p-8">
-        <div className="flex flex-col gap-10 @container">{children}</div>
+      <div className="bg-custom-emerald h-fit rounded-xl w-full  p-8 z-0">
+        <main className="flex flex-col gap-10 @container">{children}</main>
       </div>
     </div>
   );
 };
 
-export default SettingsNavBar;
+export default SettingsSideBar;

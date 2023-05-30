@@ -1,10 +1,10 @@
 import Button from "@/components/Button";
 import ErrorMsg from "@/components/ErrorMsg";
-import SettingsNavBar from "@/components/SettingsNavBar";
+import SettingsSideBar from "@/components/SettingsSideBar";
 import SimpleInputField from "@/components/SimpleInputField";
 import fetchJson, { FetchError } from "@/lib/fetchJson";
 import { User } from "@prisma/client";
-import { GetServerSidePropsContext } from "next";
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { authOptions } from "../api/auth/[...nextauth]";
 import { Session, getServerSession } from "next-auth";
@@ -19,7 +19,7 @@ type ResponseError = {
 
 var hasError = false;
 
-const UserPasswordSettings = ({ user }: { user: User }) => {
+const UserPasswordSettings = ({ user }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const [responseError, setError] = useState<ResponseError>({
     prevPassword: null,
     newPassword: null,
@@ -83,7 +83,7 @@ const UserPasswordSettings = ({ user }: { user: User }) => {
   };
 
   return (
-    <SettingsNavBar>
+    <SettingsSideBar>
       <form className="text-center grid gap-4" onSubmit={handlerSubmit}>
         <div className="flex flex-wrap gap-4 justify-center text-left">
           {user.password && (
@@ -117,7 +117,7 @@ const UserPasswordSettings = ({ user }: { user: User }) => {
 
         <Button className="max-w-[255px] w-full m-auto">Salvar</Button>
       </form>
-    </SettingsNavBar>
+    </SettingsSideBar>
   );
 };
 

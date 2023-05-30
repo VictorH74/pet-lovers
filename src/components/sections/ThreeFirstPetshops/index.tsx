@@ -12,7 +12,7 @@ const ThreeFirstPetshops = () => {
         const threeFirstsPetshops = await (
           await fetch("api/petshops/?limit=3")
         ).json();
-        setPetshops(threeFirstsPetshops);
+        setPetshops(threeFirstsPetshops.data);
       };
       fetchData();
     }, []);

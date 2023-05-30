@@ -1,31 +1,33 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { UserException } from '@/exceptions/user';
-import { PetService } from '@/services/pet.service';
-import { Pet } from '@prisma/client';
-import type { NextApiRequest, NextApiResponse } from 'next'
+import { PetService } from "@/services/pet.service";
+import { Pet } from "@prisma/client";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse<{ message: string; status?: number }>
+  req: NextApiRequest,
+  res: NextApiResponse<{ data?: Pet; status?: number; message?: string }>
 ) {
+  if (req.method !== "POST")
+    throw new Error(`Forbidden request method: ${req.method}`);
 
-    if (req.method !== "POST") throw new Error(`Forbidden request method: ${req.method}`)
+  try {
+    const petData: Pet = req.body;
 
-    try {
+    console.log(petData.image)
 
-        const petData: Pet = req.body;
-
-        await PetService.createPet(petData);
-        res.status(201).send({ message: "Pet created!", status: 201 });
-
-    } catch (error) {
-        
-        if (error instanceof Error) {
-            res.status(500).send({ message: error.message, status: 500 })
-            return
-        }
-        console.error(error);
-        res.status(500).send({ message: 'Internal server error', status: 500 });
-
+    const newPet = await PetService.createPet(
+      petData.image
+        ? { ...petData, image: Buffer.from(petData.image) }
+        : petData
+    );
+    res.status(201).send({ data: newPet, status: 201 });
+  } catch (error) {
+    console.error(error);
+    if (error instanceof Error) {
+      res.status(500).send({ message: error.message, status: 500 });
+      return;
     }
+    
+    res.status(500).send({ message: "Internal server error", status: 500 });
+  }
 }

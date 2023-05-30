@@ -1,10 +1,10 @@
-import SettingsNavBar from "@/components/SettingsNavBar";
+import SettingsSideBar from "@/components/SettingsSideBar";
 import petshopFieldsData from "./petshopFieldsData.json";
 import SimpleInputField from "@/components/SimpleInputField";
 import { FormEvent, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { GetServerSidePropsContext } from "next";
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { PetShop } from "@prisma/client";
 import {
   formatLocationToObj,
@@ -35,7 +35,7 @@ type FinalPetshopData = {
   location?: string;
 };
 
-const PetShopSettings = ({ petshop }: { petshop: PetShop }) => {
+const PetShopSettings = ({ petshop }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const [petshopData, setPetshopData] = useState<PetshopData>({
     name: petshop?.name,
     description: petshop?.description || "",
@@ -110,7 +110,7 @@ const PetShopSettings = ({ petshop }: { petshop: PetShop }) => {
   };
 
   return (
-    <SettingsNavBar>
+    <SettingsSideBar>
       {petshop?.id ? (
         <form className="grid gap-10" onSubmit={saveData}>
           <div className="w-full max-w-[500px] m-auto">
@@ -189,7 +189,7 @@ const PetShopSettings = ({ petshop }: { petshop: PetShop }) => {
           </Button>
         </div>
       )}
-    </SettingsNavBar>
+    </SettingsSideBar>
   );
 };
 

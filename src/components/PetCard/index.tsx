@@ -1,32 +1,49 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Pet } from "@prisma/client";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 interface Props {
   pet: Pet;
   deleteable: boolean;
-  handleDelete: (id: number) => Promise<void>
+  handleDelete: (id: number) => Promise<void>;
+}
+
+async function convertBufferToImageURL(buffer: Buffer) {
+  const bufferData = Buffer.from(buffer);
+  const imageURL = `data:image/jpeg;base64,${bufferData.toString('base64')}`;
+  return imageURL;
 }
 
 const PetCard: React.FC<Props> = ({ pet, deleteable, handleDelete }) => {
   const [isDeleting, setIsDeleting] = useState(false);
+  const [image, setImage] = useState("/img-placeholder.jpg");
+
+  useEffect(() => {
+    if (pet.image) {
+      convertBufferToImageURL(pet.image).then(data => {
+        setImage(data);
+      })
+    }
+  }, [])
 
   const deletePet = async () => {
     console.log("delete pet", pet.id);
-    setIsDeleting(true)
-    await handleDelete(pet.id)
-    setIsDeleting(false)
+    setIsDeleting(true);
+    await handleDelete(pet.id);
+    setIsDeleting(false);
   };
 
   return (
     <div className="w-fit rounded-xl overflow-hidden relative">
       <div className="z-10">
         <Image
+          loading="lazy"
           width={300}
           height={180}
-          loading="lazy"
-          src={`https://picsum.photos/300/180?random=${pet.id}`}
+          className="h-48 object-cover"
+          src={image}
           alt="pet image"
         />
       </div>

@@ -13,6 +13,7 @@ import fetchJson, { FetchError } from "@/lib/fetchJson";
 import PetFilterBar from "@/components/PetFilterBar";
 import { useSession } from "next-auth/react";
 import Rating from "@mui/material/Rating";
+import Loading from "@/components/Loading";
 
 interface FinalPetShop extends PetShop {
   owner: Pick<User, "id" | "name">;
@@ -102,15 +103,16 @@ export default function Petshop({ petshopData: p }: Props) {
 
   const addNewPet = async (values: Pet) => {
     let finalPet = { ...values, PetShopId: p.id, price: Number(values.price) };
+
     console.log(finalPet);
 
     // save
-    await fetchJson("/api/pets/add", {
+    const { data }: { data: Pet } = await fetchJson("/api/pets/add", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(finalPet),
     });
-    setAnimals((prev) => [finalPet, ...prev]);
+    setAnimals((prev) => [data, ...prev]);
     closeNewPetForm();
   };
 
@@ -169,7 +171,7 @@ export default function Petshop({ petshopData: p }: Props) {
   const closeNewPetForm = () => setShowNewPetForm(false);
 
   if (router.isFallback || !isLoaded) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   return (
@@ -289,7 +291,7 @@ export default function Petshop({ petshopData: p }: Props) {
             </>
           ) : (
             <div className="p-5 text-lg uppercase font-noto-sans font-semibold text-custom-gray">
-              <h2>Nenhum animal disponível</h2>
+              <h2>Nenhum pet disponível</h2>
             </div>
           )}
         </div>

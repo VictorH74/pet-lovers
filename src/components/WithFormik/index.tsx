@@ -25,7 +25,7 @@ const WithFormik: React.FC<Props> = (props) => {
       validationSchema={props.validationSchema}
       onSubmit={props.onSubmit}
     >
-      {({ values, errors, touched, handleChange, handleBlur }) => (
+      {({ errors, touched, handleChange, handleBlur, setFieldValue }) => (
         <div className="text-center">
           <Form>
             <div className="flex flex-wrap gap-4 items-center">
@@ -41,9 +41,9 @@ const WithFormik: React.FC<Props> = (props) => {
                 <Fields
                   fieldArray={props.fieldArray}
                   fieldVariant={props.fieldVariant}
-                  values={values}
                   errors={errors}
                   touched={touched}
+                  setFieldValue={setFieldValue}
                   handleChange={handleChange}
                   handleBlur={handleBlur}
                 />

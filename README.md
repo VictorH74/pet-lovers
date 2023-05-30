@@ -16,6 +16,9 @@ A personal project developed in Nextjs that allows users to search for nearby pe
 
 # Getting Started
 
+## Prerequisites
+To run this project you'll need have Docker installed
+
 1. Installing dependencies
 ```
 npm i
@@ -23,7 +26,7 @@ npm i
 
 2. Envs
 ```
-cp .env.development .env
+cp .env.example .env
 ```
 
 3. Run postgres Image

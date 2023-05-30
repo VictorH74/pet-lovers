@@ -19,9 +19,10 @@ const Header = () => {
   }
 
   return (
-    <header className="h-20 bg-custom-emerald grid place-items-center px-[20px] @container">
-      <div className="flex flex-wrap place-content-between w-[100%] min-width">
+    <header className="h-20 bg-custom-emerald grid place-items-center px-[20px] @container z-50">
+      <div className="flex flex-wrap place-content-between w-[100%] min-width z-50">
         <Logo />
+
         <div className="hidden @[800px]:flex gap-x-10 items-center">
           {navData.map((data) => (
             <Link
@@ -35,7 +36,8 @@ const Header = () => {
             </Link>
           ))}
         </div>
-        <div className="hidden @[800px]:block">
+
+        <div className="hidden @[800px]:block z-50">
           {data?.user ? (
             <AccountMenu />
           ) : (
@@ -47,9 +49,11 @@ const Header = () => {
             </button>
           )}
         </div>
+
         <div className="block @[800px]:hidden">
           <MenuDrawer />
         </div>
+        
       </div>
     </header>
   );
