@@ -1,9 +1,11 @@
 import { MuiFileInput } from "mui-file-input";
 import React, { useState } from "react";
+import { textFieldStyle } from "../Fields";
 
 interface Props {
   handleChange: (file: File | null) => void;
 }
+
 
 const FileInput: React.FC<Props> = ({ handleChange }) => {
   const [value, setValue] = useState<File | null>(null);
@@ -11,9 +13,9 @@ const FileInput: React.FC<Props> = ({ handleChange }) => {
   return (
     <MuiFileInput
       value={value}
+      sx={textFieldStyle}
       onChange={(file) => {
         if (file) {
-          console.log(file);
           if (
             !["jpeg", "jpg", "png"].includes(
               file.type.split("/")[1].toLocaleLowerCase()

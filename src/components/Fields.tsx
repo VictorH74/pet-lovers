@@ -36,8 +36,20 @@ export const textFieldStyle: SxProps = {
     borderBottomColor: "white",
   },
   "& .MuiOutlinedInput-root": {
+    input: {
+      "&:-webkit-autofill": {
+        // "-webkit-box-shadow": "0 0 0 100px #00000050 inset",
+        "-webkit-text-fill-color": "black",
+      },
+    },
     "& fieldset": {
       borderColor: "white",
+    },
+    "&:auto-fill": {
+      "&:-webkit-autofill": {
+        "-webkit-box-shadow": "0 0 0 100px red inset",
+        "-webkit-text-fill-color": "#fff",
+      },
     },
     "&:hover fieldset": {
       borderColor: "#368FC1",
@@ -67,8 +79,6 @@ const Fields: React.FC<Props> = ({
               handleChange={(file) => {
                 const reader = new FileReader();
 
-                console.log(file);
-
                 reader.onload = function (event) {
                   let buffer = null;
                   if (event.target) {
@@ -90,7 +100,7 @@ const Fields: React.FC<Props> = ({
               variant={fieldVariant || "standard"}
               className="text-white"
               label={
-                field.type ? null : (
+                field.type === "file" ? null : (
                   <p className={`${labelColor || "text-white"}`}>
                     {field.label}
                   </p>
@@ -99,7 +109,6 @@ const Fields: React.FC<Props> = ({
               id={field.name}
               name={field.name}
               type={field.type || "text"}
-              // value={values[field.name as keyof typeof values]}
               onChange={async (e) => {
                 if (
                   field.type === "file" &&
@@ -112,9 +121,7 @@ const Fields: React.FC<Props> = ({
                   reader.onload = function (event) {
                     if (event.target) {
                       const arrayBuffer = event.target.result;
-                      console.log(arrayBuffer);
                       let buffer = Buffer.from(arrayBuffer as string);
-                      console.log(buffer);
                       setFieldValue(field.name, buffer);
                     }
                   };

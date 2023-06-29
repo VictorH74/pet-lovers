@@ -23,7 +23,7 @@ interface IFormValues {
 
 const PetshopRegister = () => {
   const router = useRouter();
-  const { data: session } = useSession()
+  const { data: session } = useSession();
   const [specieInputValue, setSpecieInputValue] = useState("");
 
   const [location, setLocation] = useState<string | null>(null);
@@ -64,8 +64,10 @@ const PetshopRegister = () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(finalValues),
     });
-    router.replace(`petshops/${res.id}`);
+    
+    router.replace(`/petshops/${res.id}`);
   };
+
 
   if (!session?.user) router.replace("/signup");
 
@@ -88,13 +90,13 @@ const PetshopRegister = () => {
           validationSchema={Schema}
           onSubmit={handleSubmit}
         >
-          {({ values, errors, touched, handleChange, handleBlur }) => (
+          {({ errors, touched, handleChange, handleBlur, setFieldValue }) => (
             <Form>
               <div className="grid gap-4">
                 <Fields
                   fieldArray={data[0]}
-                  values={values}
                   errors={errors}
+                  setFieldValue={setFieldValue}
                   touched={touched}
                   handleChange={handleChange}
                   handleBlur={handleBlur}

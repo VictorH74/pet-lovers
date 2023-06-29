@@ -45,15 +45,6 @@ const LocationField: React.FC<Props> = (props) => {
 
   const clear = () => setResponse([]);
 
-  const hundlerBlur = () => {
-    if (props.required) {
-      setErrorMsg((prev) => ({
-        ...prev,
-        emptyLocation: !selectedAddress,
-      }));
-    }
-  };
-
   const geocode = async () => {
     clear();
 
@@ -80,7 +71,6 @@ const LocationField: React.FC<Props> = (props) => {
       let { value } = e.target;
       setLocationInputValue(value);
     },
-    onBlur: () => hundlerBlur(),
   };
 
   return (

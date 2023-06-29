@@ -13,8 +13,6 @@ export default async function handler(
   try {
     const petData: Pet = req.body;
 
-    console.log(petData.image)
-
     const newPet = await PetService.createPet(
       petData.image
         ? { ...petData, image: Buffer.from(petData.image) }
